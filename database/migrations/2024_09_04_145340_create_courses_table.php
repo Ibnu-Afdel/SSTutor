@@ -18,8 +18,11 @@ return new class extends Migration
             $table->text('description');
             $table->string('image')->nullable();
             $table->boolean('discount')->default(false);
+            $table->enum('discount_type', ['percent', 'amount'])->nullable(); // Add discount_type
+            $table->decimal('discount_value', 8, 2)->nullable(); // Add discount_value
             $table->decimal('rating', 2, 1)->nullable();
             $table->decimal('price', 8, 2)->nullable();
+            $table->decimal('original_price', 8, 2)->nullable();
             $table->integer('duration')->nullable();
             $table->enum('level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
             $table->date('start_date')->nullable();

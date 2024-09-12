@@ -12,7 +12,7 @@ class Follow extends Model
 
     public function follower()
     {
-        return $this->belongsTo(User::class, 'folllower_id');
+        return $this->belongsTo(User::class, 'follower_id');
     }
 
     public function followed()
