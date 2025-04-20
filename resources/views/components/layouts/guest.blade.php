@@ -13,7 +13,7 @@
 
         <!-- Header Section for Guest Pages -->
         <header class="bg-white shadow">
-            <div class="container mx-auto px-4 py-6">
+            <div class="container px-4 py-6 mx-auto">
                 <h1 class="text-xl font-bold text-gray-700">
                     <a href="{{ route('home') }}">Course Management System</a>
                 </h1>
@@ -21,13 +21,13 @@
         </header>
 
         <!-- Main Content for Guest Pages -->
-        <main class="container mx-auto px-4 py-8">
+        <main class="container px-4 py-8 mx-auto">
             {{ $slot }}
         </main>
 
         <!-- Footer Section for Guest Pages -->
-        <footer class="bg-gray-800 text-white py-6 mt-8">
-            <div class="container mx-auto px-4 text-center">
+        <footer class="py-6 mt-8 text-white bg-gray-800">
+            <div class="container px-4 mx-auto text-center">
                 <p>&copy; {{ date('Y') }} Course Management System. All rights reserved.</p>
                 <nav class="mt-4">
                     <ul class="flex justify-center space-x-4">
