@@ -14,14 +14,13 @@ class Create extends Component
 
     public $name, $description, $image, $price, $duration, $level = 'beginner';
     public $start_date, $end_date, $status = 'draft', $enrollment_limit, $requirements, $syllabus;
-    public $discount = false; // Toggle for discount
-    public $discount_type; // 'percent' or 'amount'
-    public $discount_value; // Value for discount (numeric)
-    public $instructor_id; // Instructor's ID
+    public $discount = false; 
+    public $discount_type; 
+    public $discount_value; 
+    public $instructor_id; 
 
     public function mount()
     {
-        // Automatically assign instructor_id if the user is an instructor
         if (Auth::user()->role === 'instructor') {
             $this->instructor_id = Auth::id();
         } else {
@@ -31,7 +30,6 @@ class Create extends Component
 
     public function saveCourse()
 {
-    // Validation rules
     $validatedData = $this->validate([
         'name' => 'required|string|max:255',
         'description' => 'required|string',
@@ -49,10 +47,10 @@ class Create extends Component
         'discount_value' => 'nullable|numeric|min:0',
     ]);
 
-    // Handle image upload
+  
     $imagePath = $this->image ? $this->image->store('course-images', 'public') : null;
 
-    // Calculate final price with discount if applicable
+    
     $finalPrice = $this->price;
 
     if ($this->discount && $this->discount_type === 'percent') {
@@ -61,15 +59,13 @@ class Create extends Component
         $finalPrice = max(0, $this->price - $this->discount_value);
     }
 
-    // Get authenticated user
-    $user = auth()->user();
+   
+    $user = Auth::user();
 
-    // Ensure the user is an instructor
     if ($user->role !== 'instructor') {
         abort(403, 'You are not authorized to create courses.');
     }
 
-    // Create the course with validated data and final price
     Course::create([
         'name' => $this->name,
         'description' => $this->description,
@@ -84,14 +80,14 @@ class Create extends Component
         'enrollment_limit' => $this->enrollment_limit,
         'requirements' => $this->requirements,
         'syllabus' => $this->syllabus,
-        'instructor_id' => $user->id, // Use authenticated user's ID
+        'instructor_id' => $user->id, 
         'discount' => $this->discount,
         'discount_type' => $this->discount_type,
         'discount_value' => $this->discount_value,
-        'rating' => null, // Initially set to null or 0, no self-rating
+        'rating' => null, 
     ]);
 
-    // Redirect to the courses listing
+  
     return redirect()->route('courses.index');
 }
 

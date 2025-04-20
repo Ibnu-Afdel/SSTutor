@@ -34,9 +34,9 @@
                 <nav class="hidden space-x-6 text-sm font-medium text-gray-700 md:flex">
                     <a href="{{ route('courses.index') }}" class="hover:text-blue-500">Courses</a>
         
-                    @can('create')
+                    {{-- @can('create')
                     <a href="{{ route('instructor.dashboard') }}" class="hover:text-blue-500">Instructors</a>
-                    @endcan
+                    @endcan --}}
         
                     @auth
                         @if (auth()->user()->role === 'student')

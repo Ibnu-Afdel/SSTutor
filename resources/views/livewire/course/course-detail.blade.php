@@ -48,7 +48,7 @@
         <p class="mb-2 text-sm">Requirements: {{ $course->requirements }}</p>
         <p class="mb-4 text-sm">Syllabus: {{ $course->syllabus }}</p>
 
-        <p class="mb-4 font-semibold">Instructor: {{ $course->instructor->user->name }}</p>
+        <p class="mb-4 font-semibold">Instructor: {{ $course->instructor->name }}</p>
     </div>
 
     

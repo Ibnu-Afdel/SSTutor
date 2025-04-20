@@ -30,7 +30,6 @@ Route::get('/', HomePage::class)->name('home');
 
 // Courses
 Route::get('/courses', CourseListing::class)->name('courses.index'); // List all courses
-Route::get('/courses/create', Create::class)->name('courses.create'); // Create a new course
 
 Route::get('/courses/{courseId}', CourseDetail::class)->name('course.detail'); // Course details page
 
@@ -38,7 +37,7 @@ Route::get('/courses/{courseId}', CourseDetail::class)->name('course.detail'); /
 
 // Route::get('/courses/edit/{course}', Edit::class)->name('courses.edit'); // Edit an existing course
 
-Route::get('/courses/edit/{courseId}', Edit::class)->name('courses.edit')->where('course', '[0-9]+');
+//EDIT       Route::get('/courses/edit/{courseId}', Edit::class)->name('courses.edit')->where('course', '[0-9]+');
 
 // Enrollments
 Route::get('/courses/{course}/enroll', CourseEnrollment::class)->name('course.enrollment'); // Handle course enrollment
@@ -53,6 +52,8 @@ Route::get('/courses/{course}/reviews', Review::class)->name('course.reviews'); 
 Route::middleware('instructor')->group(function () {
     Route::get('/instructor/dashboard', InstructorDashboard::class)->name('instructor.dashboard'); // Instructor's dashboard
     Route::get('/instructor/courses', CourseManagement::class)->name('instructor.course_management'); // Manage courses
+    Route::get('/instructor/courses/create', Create::class)->name('courses.create'); // Create a new course
+    Route::get('/instructor/courses/edit/{courseId}', Edit::class)->name('courses.edit');
 });
 
 

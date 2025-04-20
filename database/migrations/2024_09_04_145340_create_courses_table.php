@@ -31,7 +31,12 @@ return new class extends Migration
             $table->integer('enrollment_limit')->nullable();
             $table->text('requirements')->nullable();
             $table->longText('syllabus')->nullable();
-            $table->foreignIdFor(Instructor::class)->constrained()->cascadeOnDelete();  
+            // $table->foreignIdFor(Instructor::class)->constrained()->cascadeOnDelete();  
+
+            $table->foreignId('instructor_id') 
+            ->constrained('users')               
+            ->cascadeOnDelete();                
+
             $table->timestamps();
         });
     }

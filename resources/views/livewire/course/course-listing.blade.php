@@ -19,7 +19,7 @@
 
                     <!-- Course Image (conditionally rendered) -->
                     @if($course->image)
-                        <img src="{{ $course->image }}" alt="{{ $course->name }}" class="object-cover w-full h-40 mb-4 rounded-lg">
+                        <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}" class="object-cover w-full h-40 mb-4 rounded-lg">
                     @else
                         <!-- Placeholder for courses without an image -->
                         <div class="flex items-center justify-center w-full h-40 mb-4 bg-gray-200 rounded-lg">

@@ -12,6 +12,11 @@ class Course extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $casts = [
+        'start_date' => 'date',
+       'end_date'   => 'date',
+    ];
+
     public function category() : BelongsToMany
     {
         return $this->belongsToMany(Category::class);
@@ -19,7 +24,7 @@ class Course extends Model
 
     public function instructor() : BelongsTo
     {
-        return $this->belongsTo(Instructor::class, 'instructor_id' );
+        return $this->belongsTo(User::class, 'instructor_id' );
     }
 
     public function lessons()

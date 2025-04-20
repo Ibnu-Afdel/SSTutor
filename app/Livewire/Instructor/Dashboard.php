@@ -28,8 +28,7 @@ class Dashboard extends Component
                                             ->where('status', 'completed')
                                             ->count();
 
-            // Assuming there is an Enrollment model with a course_id and student_id
-            $this->enrolledStudents = \App\Models\Enrollment::whereHas('course', function($query) use ($instructorId) {
+            $this->enrolledStudents = Enrollment::whereHas('course', function($query) use ($instructorId) {
                 $query->where('instructor_id', $instructorId);
             })->distinct('student_id')->count();
         } else {

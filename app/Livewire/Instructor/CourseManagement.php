@@ -2,137 +2,217 @@
 
 namespace App\Livewire\Instructor;
 
-use App\Models\Category;
+use App\Models\Category; 
 use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithFileUploads; 
 
 class CourseManagement extends Component
 {
-    public $courses = []; // Initialize as an empty array or collection
-    public $categories;
+    use WithFileUploads; 
+
+    public $courses = [];
+    public $categories; 
+
+    // --- Form State ---
+    public $isCreatingOrEditing = false; 
     public $courseId;
-    public $name;
-    public $description;
-    public $image;
-    public $price;
-    public $discount = false;
+
+    // --- Form Fields ---
+    public $name, $description, $price, $level = 'beginner';
+    public $start_date, $end_date, $status = 'draft', $enrollment_limit, $requirements, $syllabus;
+    public $discount = true;
     public $discount_type;
     public $discount_value;
-    public $level;
-    public $start_date;
-    public $end_date;
     public $duration;
-    public $enrollment_limit;
-    public $requirements;
-    public $syllabus;
+    public $image;
+    public $existingImageUrl; 
+    public $instructor_id; 
+  
+
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            // required on create, optional on update
+            'image' => ($this->courseId ? 'nullable' : 'required') . '|image|mimes:jpg,png,jpeg|max:2048',
+            'price' => 'required|numeric|min:0',
+            'duration' => 'required|numeric|min:1', 
+            'level' => 'required|in:beginner,intermediate,advanced',
+            'start_date' => 'nullable|date', 
+            'end_date' => 'nullable|date|after_or_equal:start_date', 
+            'status' => 'required|in:draft,published,archived',
+            'enrollment_limit' => 'nullable|integer|min:1',
+            'requirements' => 'nullable|string',
+            'syllabus' => 'nullable|string',
+            
+            'discount_type' => 'required_if:discount,true|nullable|in:percent,amount',
+            'discount_value' => 'required_if:discount,true|nullable|numeric|min:0',
+        ];
+    }
+
 
     public function mount()
     {
         $user = Auth::user();
-        if ($user && $user->instructor) {
-            $instructorId = $user->instructor->id;
-
-            $this->courses = Course::where('instructor_id', $instructorId)->get();
-            $this->categories = Category::all(); // Assuming you want to show categories
+        if ($user && $user->role === 'instructor') { 
+             $this->courses = Course::where('instructor_id', $user->id)->get();
+            // $this->categories = Category::all(); // Load if needed
+        } else {
+             abort(403, 'Unauthorized action.'); // Or redirect, flash message
         }
     }
 
     public function createCourse()
     {
         $this->resetInputFields();
-        $this->courseId = null; // Ensure no course ID is set for new course
+        $this->isCreatingOrEditing = true; 
     }
 
     public function editCourse($id)
     {
+        $user = Auth::user();
         $course = Course::find($id);
 
-        if ($course && $course->instructor_id == Auth::user()->instructor->id) {
+        if ($course && $user && $course->instructor_id == $user->id) {
             $this->courseId = $course->id;
             $this->name = $course->name;
             $this->description = $course->description;
-            $this->price = $course->price;
+            $this->price = $course->original_price ?? $course->price; 
             $this->discount = $course->discount;
             $this->discount_type = $course->discount_type;
             $this->discount_value = $course->discount_value;
             $this->level = $course->level;
-            $this->start_date = $course->start_date;
-            $this->end_date = $course->end_date;
+            $this->start_date = $course->start_date ? $course->start_date->format('Y-m-d') : null; 
+            $this->end_date = $course->end_date ? $course->end_date->format('Y-m-d') : null;     
             $this->duration = $course->duration;
             $this->enrollment_limit = $course->enrollment_limit;
             $this->requirements = $course->requirements;
             $this->syllabus = $course->syllabus;
+            $this->existingImageUrl = $course->image ? asset('storage/' . $course->image) : null; 
+            $this->status = $course->status; 
+
+            $this->isCreatingOrEditing = true; 
+        } else {
+             session()->flash('error', 'Course not found or you are not authorized to edit it.');
+             $this->isCreatingOrEditing = false;
         }
     }
 
-    public function saveCourse()
+     public function saveCourse()
     {
-        $this->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image',
-            'discount' => 'boolean',
-            'discount_type' => 'nullable|in:percent,amount',
-            'discount_value' => 'nullable|numeric',
-            'level' => 'required|in:beginner,intermediate,advanced',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            'duration' => 'required|numeric',
-            'enrollment_limit' => 'nullable|numeric',
-            'requirements' => 'nullable|string',
-            'syllabus' => 'nullable|string',
-        ]);
+        $validatedData = $this->validate(); 
 
+        $user = Auth::user();
+        // Double-check authorization
+        if (!$user || $user->role !== 'instructor') {
+             abort(403, 'You are not authorized to save courses.');
+        }
+
+        // Handle image upload (only if a new image is provided)
+        $imagePath = null;
+        if ($this->image) {
+            $imagePath = $this->image->store('course-images', 'public');
+        }
+
+        // Prepare data array common to create and update
         $courseData = [
             'name' => $this->name,
             'description' => $this->description,
-            'price' => $this->price,
-            'discount' => $this->discount,
-            'discount_type' => $this->discount_type,
-            'discount_value' => $this->discount_value,
+            'original_price' => $this->price, // Store the base price
+            'duration' => $this->duration,
             'level' => $this->level,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
-            'duration' => $this->duration,
+            'status' => $this->status, 
             'enrollment_limit' => $this->enrollment_limit,
             'requirements' => $this->requirements,
             'syllabus' => $this->syllabus,
+            'discount' => $this->discount,
+            'discount_type' => $this->discount ? $this->discount_type : null, 
+            'discount_value' => $this->discount ? $this->discount_value : null, 
+            
         ];
 
-        if ($this->courseId) {
-            $course = Course::find($this->courseId);
-            $course->update($courseData);
-        } else {
-            $courseData['instructor_id'] = Auth::user()->instructor->id;
-            Course::create($courseData);
+        // Add image path only if a new one was uploaded
+        if ($imagePath) {
+            $courseData['image'] = $imagePath;
+            // Optionally: delete the old image if updating
         }
 
-        session()->flash('message', 'Course saved successfully.');
+        // Calculate final price based on discount
+        $finalPrice = $this->price;
+        if ($this->discount && $this->discount_type && $this->discount_value) {
+            if ($this->discount_type === 'percent') {
+                $finalPrice = $this->price * ((100 - $this->discount_value) / 100);
+            } elseif ($this->discount_type === 'amount') {
+                $finalPrice = max(0, $this->price - $this->discount_value); // Ensure price doesn't go below 0
+            }
+        }
+        $courseData['price'] = $finalPrice; 
+
+
+        if ($this->courseId) {
+            // Update existing course
+            $course = Course::find($this->courseId);
+            if ($course && $course->instructor_id == $user->id) {
+                 // If a new image was uploaded and an old one exists, delete the old one
+                 if ($imagePath && $course->image) {
+                     \Storage::disk('public')->delete($course->image);
+                 }
+                 $course->update($courseData);
+                 session()->flash('message', 'Course updated successfully.');
+            } else {
+                 session()->flash('error', 'Failed to update course.');
+                 return; 
+            }
+        } else {
+            // Create new course
+            $courseData['instructor_id'] = $user->id;
+            Course::create($courseData);
+            session()->flash('message', 'Course created successfully.');
+        }
+
+        $this->isCreatingOrEditing = false; 
+        $this->resetInputFields(); 
+        $this->courses = Course::where('instructor_id', $user->id)->get(); 
+    }
+
+    public function cancel()
+    {
+        $this->isCreatingOrEditing = false;
         $this->resetInputFields();
-        $this->courses = Course::where('instructor_id', Auth::user()->instructor->id)->get(); // Refresh course list
     }
 
     private function resetInputFields()
     {
+        $this->courseId = null;
         $this->name = '';
         $this->description = '';
         $this->price = '';
         $this->discount = false;
-        $this->discount_type = '';
-        $this->discount_value = '';
-        $this->level = '';
-        $this->start_date = '';
-        $this->end_date = '';
+        $this->discount_type = null;
+        $this->discount_value = null;
+        $this->level = 'beginner'; 
+        $this->start_date = null;
+        $this->end_date = null;
         $this->duration = '';
-        $this->enrollment_limit = '';
+        $this->enrollment_limit = null;
         $this->requirements = '';
         $this->syllabus = '';
+        $this->image = null; 
+        $this->existingImageUrl = null;
+        $this->status = 'draft'; 
+        $this->resetValidation(); 
     }
+
 
     public function render()
     {
-        return view('livewire.instructor.course-management');
-    }    
+        return view('livewire.instructor.course-management', [
+            'currentImageUrl' => $this->existingImageUrl,
+        ]);
+    }
 }
