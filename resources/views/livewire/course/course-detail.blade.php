@@ -1,6 +1,8 @@
 <div class="max-w-5xl px-4 py-8 mx-auto">
 
     <h1 class="mb-6 text-3xl font-bold text-gray-900 sm:text-4xl">{{ $course->name }}</h1>
+    <h2 class="mb-6 font-bold text-gray-900 "><a href="{{ route('instructor.manage_content', $course->id) }}">Manage
+            Content</a></h2>
 
     @if ($course->image)
         <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}"

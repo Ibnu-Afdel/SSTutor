@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Course extends Model
 {
@@ -14,22 +16,27 @@ class Course extends Model
 
     protected $casts = [
         'start_date' => 'date',
-       'end_date'   => 'date',
+        'end_date'   => 'date',
     ];
 
-    public function category() : BelongsToMany
+    public function category(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
     }
 
-    public function instructor() : BelongsTo
+    public function instructor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'instructor_id' );
+        return $this->belongsTo(User::class, 'instructor_id');
     }
 
-    public function lessons()
+    // public function lessons()
+    // {
+    //     return $this->hasMany(Lesson::class);
+    // }
+
+    public function lessons(): HasManyThrough
     {
-        return $this->hasMany(Lesson::class);
+        return $this->hasManyThrough(Lesson::class, Section::class);
     }
 
     public function reviews()
@@ -56,5 +63,10 @@ class Course extends Model
     public function chats()
     {
         return $this->hasMany(Chat::class);
+    }
+
+    public function sections(): HasMany
+    {
+        return $this->hasMany(Section::class)->orderBy('order');
     }
 }

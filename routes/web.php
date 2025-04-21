@@ -22,6 +22,7 @@ use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Course\CourseEnrollment;
 use App\Livewire\Course\Create;
 use App\Livewire\Course\Edit;
+use App\Livewire\Instructor\ManageContent;
 use Illuminate\Support\Facades\Auth;
 
 // Home Page Route
@@ -54,6 +55,7 @@ Route::middleware('instructor')->group(function () {
     Route::get('/instructor/courses', CourseManagement::class)->name('instructor.course_management'); // Manage courses
     Route::get('/instructor/courses/create', Create::class)->name('courses.create'); // Create a new course
     Route::get('/instructor/courses/edit/{courseId}', Edit::class)->name('courses.edit');
+    Route::get('/instructor/courses/{course}/manage-content', ManageContent::class)->name('instructor.manage_content');
 });
 
 
@@ -96,7 +98,3 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('/courses/{course}/lessons', Lesson::class)->name('courses.lessons');
 Route::get('/courses/{course}/enroll', CourseEnrollment::class)->name('courses.enroll');
-
-
-
-
