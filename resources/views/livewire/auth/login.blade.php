@@ -1,21 +1,48 @@
-<div>
-    <h1>Login</h1>
-    @if (session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-    <form wire:submit.prevent="login">
+<div class="flex items-center justify-center px-4 py-12 bg-gray-100 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md p-8 space-y-8 bg-white shadow-lg rounded-2xl">
         <div>
-            <label for="email">Email:</label>
-            <input type="email" wire:model="email">
-            @error('email') <span class="error">{{ $message }}</span> @enderror
+            <h2 class="text-3xl font-bold text-center text-gray-900">Welcome back</h2>
+            <p class="mt-2 text-sm text-center text-gray-600">
+                Don’t have an account?
+                <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500">Register</a>
+            </p>
         </div>
 
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" wire:model="password">
-            @error('password') <span class="error">{{ $message }}</span> @enderror
-        </div>
+        @if (session('error'))
+            <div class="px-4 py-3 text-sm text-red-700 bg-red-100 rounded-lg shadow-sm">
+                {{ session('error') }}
+            </div>
+        @endif
 
-        <button type="submit">Login</button>
-    </form>
+        <form wire:submit.prevent="login" class="mt-8 space-y-6">
+            <div class="-space-y-px rounded-md shadow-sm">
+                <!-- Email -->
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" wire:model="email" id="email"
+                        class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    @error('email')
+                        <span class="text-sm text-red-600">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Password -->
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" wire:model="password" id="password"
+                        class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    @error('password')
+                        <span class="text-sm text-red-600">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                    class="flex justify-center w-full px-4 py-2 text-white transition duration-150 ease-in-out bg-indigo-600 border border-transparent rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Login
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

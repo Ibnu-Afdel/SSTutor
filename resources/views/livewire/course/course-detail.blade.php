@@ -1,96 +1,116 @@
+<div class="max-w-5xl px-4 py-8 mx-auto">
 
-<div>
-<div class="max-w-4xl p-4 mx-auto">
-    <!-- Course Title -->
-    <h1 class="mb-6 text-4xl font-bold">{{ $course->name }}</h1>
-    
-    <!-- Course Image -->
-    @if($course->image)
-        <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}" class="object-cover w-full mb-6 rounded-lg h-60">
+    <h1 class="mb-6 text-3xl font-bold text-gray-900 sm:text-4xl">{{ $course->name }}</h1>
+
+    @if ($course->image)
+        <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}"
+            class="object-cover w-full h-64 mb-8 shadow rounded-xl">
     @else
-        <!-- Placeholder for courses without an image -->
-        <div class="flex items-center justify-center w-full mb-6 bg-gray-200 rounded-lg h-60">
-            <span class="text-gray-500">No Image Available</span>
+        <div class="flex items-center justify-center w-full h-64 mb-8 text-gray-500 bg-gray-200 rounded-xl">
+            📷 No Image Available
         </div>
     @endif
 
-    <!-- Course Description -->
-    <p class="mb-6 text-lg">{{ $course->description }}</p>
+    <p class="mb-6 text-lg text-gray-700">{{ $course->description }}</p>
 
-    <!-- Course Details -->
-    <div class="p-4 mb-6 bg-gray-100 rounded-lg shadow-md">
-        <p class="mb-2 font-semibold">Rating:
-            @if($course->rating)
-                <span class="text-yellow-500">
-                    @for($i = 0; $i < floor($course->rating); $i++)
-                        ★
-                    @endfor
-                    @for($i = 0; $i < (5 - floor($course->rating)); $i++)
-                        ☆
-                    @endfor
-                </span>
-            @else
-                <span class="text-gray-400">No ratings yet</span>
-            @endif
-        </p>
+    <div class="grid gap-6 p-6 mb-10 bg-white shadow sm:grid-cols-2 rounded-xl">
+        <div class="space-y-3">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                <span class="text-lg text-yellow-500">⭐</span>
+                @if ($course->rating)
+                    {{ number_format($course->rating, 1) }}/5
+                @else
+                    No ratings yet
+                @endif
+            </div>
 
-        <p class="mb-2 font-semibold">Price: ${{ number_format($course->price, 2) }}</p>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                💰 <span class="font-medium">Price:</span> ${{ number_format($course->price, 2) }}
+            </div>
 
-        <p class="mb-2 text-sm">Duration: {{ $course->duration }} hours</p>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                ⏱️ <span class="font-medium">Duration:</span> {{ $course->duration }} hours
+            </div>
 
-        <p class="mb-2 text-sm">Level: {{ ucfirst($course->level) }}</p>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                📅 <span class="font-medium">Start:</span>
+                {{ \Carbon\Carbon::parse($course->start_date)->format('F j, Y') }}
+            </div>
 
-        <p class="mb-2 text-sm">Starts: {{ \Carbon\Carbon::parse($course->start_date)->format('F j, Y') }}</p>
-        <p class="mb-2 text-sm">Ends: {{ \Carbon\Carbon::parse($course->end_date)->format('F j, Y') }}</p>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                📅 <span class="font-medium">End:</span>
+                {{ \Carbon\Carbon::parse($course->end_date)->format('F j, Y') }}
+            </div>
+        </div>
 
-        <p class="mb-2 text-sm">Enrollment Limit: {{ $course->enrollment_limit }}</p>
+        <div class="space-y-3">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                🎓 <span class="font-medium">Level:</span> {{ ucfirst($course->level) }}
+            </div>
 
-        <p class="mb-2 text-sm">Requirements: {{ $course->requirements }}</p>
-        <p class="mb-4 text-sm">Syllabus: {{ $course->syllabus }}</p>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                👥 <span class="font-medium">Enrollment Limit:</span> {{ $course->enrollment_limit }}
+            </div>
 
-        <p class="mb-4 font-semibold">Instructor: {{ $course->instructor->name }}</p>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                🧑‍🏫 <span class="font-medium">Instructor:</span> {{ $course->instructor->name }}
+            </div>
+        </div>
     </div>
 
-    
-        <!-- Add the Chat Component -->
-        <!-- Course details content -->
+    <div class="p-6 mb-10 space-y-6 shadow bg-gray-50 rounded-xl">
+        <div>
+            <h2 class="mb-2 text-xl font-semibold text-gray-800">📌 Requirements</h2>
+            <p class="text-sm text-gray-600 whitespace-pre-line">{{ $course->requirements }}</p>
+        </div>
+        <div>
+            <h2 class="mb-2 text-xl font-semibold text-gray-800">📖 Syllabus</h2>
+            <p class="text-sm text-gray-600 whitespace-pre-line">{{ $course->syllabus }}</p>
+        </div>
+    </div>
 
-    <!-- Chat sidebar (only displayed if the user is enrolled) -->
-    @auth
-    @livewire('course.chat', ['course' => $course])
-    @endauth
-
-<!-- Guests cannot access the chat, they will only see the course details -->
-  
-
-    @livewire('course.review', ['courseId' => $course->id])
+    <div class="mb-8">
+        @livewire('course.course-enrollment', ['courseId' => $course->id])
+    </div>
 
 
-    <!-- Enrollment Button -->
-    @livewire('course.course-enrollment', ['courseId' => $course->id])
+    @if ($enrollment_status)
+        @auth
+            <div class="mb-8">
+                @livewire('course.chat', ['course' => $course])
+            </div>
 
-    <!-- Lessons Section -->
+            <div class="mb-8">
+                @livewire('course.review', ['courseId' => $course->id])
+            </div>
+        @endauth
+    @endif
+
     @livewire('course.lesson', ['courseId' => $course->id])
 
-    <!-- Lessons Video -->
-    <div class="mt-8">
-        @foreach($course->lessons as $lesson)
-            <div class="mt-4">
-                <h2 class="text-2xl font-semibold">{{ $lesson->title }}</h2>
-                @if($lesson->video_url)
-                    <div class="mt-2">
-                        <video width="640" height="360" controls>
+
+    <div class="space-y-8">
+        <h2 class="text-2xl font-bold text-gray-900">🎥 Lessons</h2>
+
+        @forelse ($course->lessons as $lesson)
+            <div class="p-6 bg-white shadow rounded-xl">
+                <h3 class="mb-2 text-xl font-semibold text-gray-800">{{ $lesson->title }}</h3>
+
+                @if ($lesson->video_url)
+                    <div class="mb-4">
+                        <video class="w-full rounded" controls>
                             <source src="{{ asset('storage/' . $lesson->video_url) }}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
                 @else
-                    <p class="mt-2 text-gray-500">No video available for this lesson.</p>
+                    <p class="text-sm text-gray-500">No video available for this lesson.</p>
                 @endif
-                <p class="mt-2">{{ $lesson->content }}</p>
-            </div>
-        @endforeach
-    </div>
 
-</div>
+                <p class="mt-2 text-sm text-gray-700 whitespace-pre-line">{{ $lesson->content }}</p>
+            </div>
+        @empty
+            <p class="text-sm text-gray-500">No lessons available yet.</p>
+        @endforelse
+    </div>
 </div>

@@ -2,9 +2,8 @@
     <!-- Hero Section -->
     <section class="relative px-4 py-20 overflow-hidden text-center">
         <!-- Online background image -->
-        <img 
-            src="https://images.unsplash.com/photo-1601933471669-7a4b331c5a4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80" 
-            alt="Learning Background" 
+        <img src="https://images.unsplash.com/photo-1601933471669-7a4b331c5a4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80"
+            alt="Learning Background"
             class="absolute inset-0 object-cover w-full h-full pointer-events-none opacity-20" />
 
         <!-- Overlay -->
@@ -20,13 +19,15 @@
             </p>
             <div class="flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row">
                 <a href="{{ route('courses.index') }}"
-                   class="px-6 py-3 font-semibold text-white transition bg-green-700 rounded-lg hover:bg-green-600">
+                    class="px-6 py-3 font-semibold text-white transition bg-green-700 rounded-lg hover:bg-green-600">
                     🎓 Browse Courses
                 </a>
-                <a href="{{ route('user.dashboard') }}"
-                   class="px-6 py-3 font-semibold text-white transition rounded-lg bg-slate-800 hover:bg-slate-700">
-                    📘 Go to Dashboard
-                </a>
+                @auth
+                    <a href="{{ route('user.dashboard') }}"
+                        class="px-6 py-3 font-semibold text-white transition rounded-lg bg-slate-800 hover:bg-slate-700">
+                        📘 Go to Dashboard
+                    </a>
+                @endauth
             </div>
         </div>
     </section>
