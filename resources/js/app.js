@@ -1,5 +1,6 @@
 import "./bootstrap";
 import Sortable from "sortablejs";
+
 // DO NOT import Alpine or call Alpine.start() here if Livewire manages it.
 
 document.addEventListener("alpine:init", () => {

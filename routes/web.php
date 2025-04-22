@@ -74,6 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/{course}', Chat::class)->name('user.chat'); // Chat between students of the same course
     // Route::get('/courses/{course}/learn', CoursePlay::class)->name('course-play');
     Route::get('/courses/{course}/learn/{lesson?}', CoursePlay::class)->name('course-play');
+    Route::get('/courses/{course}/chat', Chat::class)->name('course-chat');
 });
 
 

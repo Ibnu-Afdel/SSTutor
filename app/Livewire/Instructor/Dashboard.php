@@ -11,21 +11,25 @@ class Dashboard extends Component
 {
     public $totalCourses;
     public $inProgressCourses;
-    public $completedCourses;
+    public $publishedCourses;
+    public $archivedCourses;
     public $enrolledStudents;
 
     public function mount()
     {
         $user = Auth::user();
-        if ($user && $user->instructor) {
-            $instructorId = $user->instructor->id;
+        if ($user && $user->role === 'instructor') {
+            $instructorId = $user->id;
 
             $this->totalCourses = Course::where('instructor_id', $instructorId)->count();
             $this->inProgressCourses = Course::where('instructor_id', $instructorId)
-                                             ->where('status', 'in-progress')
+                                             ->where('status', 'draft')
                                              ->count();
-            $this->completedCourses = Course::where('instructor_id', $instructorId)
-                                            ->where('status', 'completed')
+            $this->publishedCourses = Course::where('instructor_id', $instructorId)
+                                            ->where('status', 'published')
+                                            ->count();
+            $this->archivedCourses = Course::where('instructor_id', $instructorId)
+                                            ->where('status', 'archived')
                                             ->count();
 
             $this->enrolledStudents = Enrollment::whereHas('course', function($query) use ($instructorId) {
@@ -34,7 +38,8 @@ class Dashboard extends Component
         } else {
             $this->totalCourses = 0;
             $this->inProgressCourses = 0;
-            $this->completedCourses = 0;
+            $this->publishedCourses = 0;
+            $this->archivedCourses = 0;
             $this->enrolledStudents = 0;
         }
     }
