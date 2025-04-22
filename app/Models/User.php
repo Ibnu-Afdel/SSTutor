@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -54,7 +55,7 @@ class User extends Authenticatable
         return $this->hasMany(Course::class, 'instructor_id');
     }
 
-    public function instructor():HasOne
+    public function instructor(): HasOne
     {
         return $this->hasOne(Instructor::class);
     }
@@ -89,4 +90,10 @@ class User extends Authenticatable
         return $this->role === 'instructor';
     }
 
+    public function lessons(): BelongsToMany
+    {
+        return $this->belongsToMany(Lesson::class)
+            ->withPivot('completed_at')
+            ->withTimestamps();
+    }
 }

@@ -85,6 +85,10 @@
             <div class="mb-8">
                 @livewire('course.review', ['courseId' => $course->id])
             </div>
+            <div class="mb-8">
+                <a class="p-4 text-white bg-green-800 rounded-lg hover:shadow-md hover:bg-green-700"
+                    href="{{ route('course-play', ['course' => $course->id]) }}">Start Learning</a>
+            </div>
         @endauth
     @endif
 

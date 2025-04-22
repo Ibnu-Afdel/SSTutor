@@ -36,9 +36,6 @@ class ManageContent extends Component
     public $editingLessonTitle = '';
     public $editingLessonContent = '';
     public $editingLessonVideoUrl = '';
-
-
-
     protected function rules()
     {
         $rules = [];

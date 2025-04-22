@@ -120,20 +120,23 @@
                                                 <span class="text-xs text-red-600">{{ $message }}</span>
                                             @enderror
                                         </div>
+
                                         <div>
                                             <label class="block text-xs font-medium text-gray-700">Video URL
                                                 (Optional)
                                             </label>
                                             <input type="url" wire:model.defer="editingLessonVideoUrl"
-                                                placeholder="https://..."
+                                                placeholder="https://www.youtube-nocookie.com/embed/"
                                                 class="block w-full px-3 py-1.5 mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                             @error('editingLessonVideoUrl')
                                                 <span class="text-xs text-red-600">{{ $message }}</span>
                                             @enderror
                                         </div>
+
                                         <div>
                                             <label class="block text-xs font-medium text-gray-700">Content
-                                                (Optional)</label>
+                                                (Optional)
+                                            </label>
                                             <textarea wire:model.defer="editingLessonContent" rows="3"
                                                 class="block w-full px-3 py-1.5 mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                                         </div>
@@ -222,16 +225,18 @@
                                             <span class="text-xs text-red-600">{{ $message }}</span>
                                         @enderror
                                     </div>
+
                                     <div>
                                         <label class="block text-xs font-medium text-gray-700">Video URL
                                             (Optional)</label>
                                         <input type="url" wire:model.defer="newLessonVideoUrl"
-                                            placeholder="https://..."
+                                            placeholder="https://www.youtube-nocookie.com/embed/"
                                             class="block w-full px-3 py-1.5 mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                         @error('newLessonVideoUrl')
                                             <span class="text-xs text-red-600">{{ $message }}</span>
                                         @enderror
                                     </div>
+
                                     <div>
                                         <label class="block text-xs font-medium text-gray-700">Content
                                             (Optional)</label>

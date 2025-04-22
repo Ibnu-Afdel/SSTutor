@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Course\CoursePlay;
 use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\ManageCourses;
@@ -71,6 +72,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', Profile::class)->name('user.profile'); // User's profile
     Route::get('/follow/{user}', Follow::class)->name('user.follow'); // Follow/Unfollow functionality
     Route::get('/chat/{course}', Chat::class)->name('user.chat'); // Chat between students of the same course
+    // Route::get('/courses/{course}/learn', CoursePlay::class)->name('course-play');
+    Route::get('/courses/{course}/learn/{lesson?}', CoursePlay::class)->name('course-play');
 });
 
 

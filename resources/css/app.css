@@ -11,3 +11,7 @@ svg {
 svg:hover {
     color: yellow;
 }
+
+[x-cloak] {
+    display: none !important;
+}
