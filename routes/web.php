@@ -40,9 +40,9 @@ Route::middleware('instructor')->group(function () {
 
 
 Route::middleware(['admin'])->group(function () {
-    Route::get('/admin/courses', ManageCourses::class)->name('admin.manage_courses'); 
-    Route::get('/admin/users', ManageUsers::class)->name('admin.manage_users'); 
-    Route::get('/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
+    Route::get('user/admin/courses', ManageCourses::class)->name('admin.manage_courses'); 
+    Route::get('user/admin/users', ManageUsers::class)->name('admin.manage_users'); 
+    Route::get('user/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
 });
 
 Route::middleware('auth')->group(function () {
