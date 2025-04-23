@@ -84,7 +84,9 @@
                      <div class="flex items-center gap-3 text-sm">
                         <i class="w-5 text-center text-indigo-600 fas fa-chalkboard-teacher fa-fw"></i>
                         <span class="font-medium text-gray-600">Instructor:</span>
-                        <span class="text-gray-800">{{ $course->instructor->name }}</span>
+                       <a href="{{ route('user.profile', ['username' => $username])}}">
+                        <span class="p-2 font-bold text-blue-800 rounded-lg bg-blue-50 hover:bg-blue-100">{{ $course->instructor->name }}</span>
+                       </a>
                     </div>
                 </div>
             </div>

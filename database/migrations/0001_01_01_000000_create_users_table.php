@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('role', ['guest', 'student', 'instructor', 'admin'])->default('guest');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->string('username')->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

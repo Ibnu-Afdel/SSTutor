@@ -10,6 +10,7 @@ class Register extends Component
 {
 
     public $name;
+    public $username;
     public $email;
     public $password;
     public $password_confirmation;
@@ -18,6 +19,15 @@ class Register extends Component
         'name' => 'required',
         'email' => 'required|email|unique:users,email',
         'password' => 'required|confirmed|min:6',
+        'username' => [
+                    'required',
+                    'string',
+                    'min:3',
+                    'max:20',
+                    'unique:users,username',
+                    'regex:/^[a-zA-Z0-9_-]+$/', // ✅ no spaces, only letters, numbers, dash, underscore
+],
+
     ];
 
     public function register()
@@ -26,12 +36,13 @@ class Register extends Component
 
         User::create([
             'name' => $this->name,
+            'username' => $this->username,
             'email' => $this->email,
             'password' => Hash::make($this->password),
-            'role' => 'student',  // Default role
+            'role' => 'student',  
         ]);
 
-        return redirect('/login');
+        return redirect('/profile');
     }
     public function render()
     {

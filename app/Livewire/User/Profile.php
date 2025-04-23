@@ -12,9 +12,9 @@ class Profile extends Component
     public $enrolledCourses;
     public $instructorCourses;
 
-    public function mount()
+    public function mount($username)
     {
-        $this->user = Auth::user();
+        $this->user = Auth::user()->where('username', $username)->firstOrFail();
         
         if ($this->user->role == 'student') {
             $this->enrolledCourses = $this->user->enrollments->pluck('course');

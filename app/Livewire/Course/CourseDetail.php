@@ -12,6 +12,7 @@ use Livewire\Component;
 class CourseDetail extends Component
 {
     public $course;
+    public $username;
     public $isInstructor = false;
 
 
@@ -20,6 +21,7 @@ class CourseDetail extends Component
 
     public function mount($courseId)
     {
+        $this->username = Auth::user()->username;
         $this->course = Course::findOrFail($courseId);
         $this->isInstructor = Auth::check() && Auth::user()->role === 'instructor';
 
