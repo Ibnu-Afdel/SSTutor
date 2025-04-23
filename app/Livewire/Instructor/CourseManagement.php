@@ -29,7 +29,7 @@ class CourseManagement extends Component
     public $image;
     public $existingImageUrl; 
     public $instructor_id; 
-  
+    public $confirmingCourseDeletion = false;    
 
     protected function rules()
     {
@@ -208,6 +208,50 @@ class CourseManagement extends Component
         $this->resetValidation(); 
     }
 
+    public function confirmCourseDeletion(Course $course)
+    {
+        $this->confirmingCourseDeletion = $course->id;
+    }
+
+    public function confirmDelete(Course $course)
+    {
+        // ensure only the instructor can delete their own course
+        $user = Auth::user();
+        if (!$course || $course->instructor_id !== $user->id) {
+            session()->flash('error', 'Course not found or unauthorized.');
+            $this->confirmingCourseDeletion = false;
+            return;
+        }
+        
+        $course->delete();
+        session()->flash('message', 'Course deleted successfully.');
+        $this->confirmingCourseDeletion = false;
+
+        $this->courses = Course::where('instructor_id', $user->id)->get();
+    }
+
+
+    
+
+    /**
+     * Perform deletion after confirmation.
+     */
+    // public function deleteCourse($courseId)
+    // {
+    //     $user = Auth::user();
+    //     $course = Course::find($courseId);
+    //     if (!$course || $course->instructor_id !== $user->id) {
+    //         session()->flash('error', 'Course not found or unauthorized.');
+    //         $this->confirmingCourseDeletion = false;
+    //         return;
+    //     }
+    //     $course->delete();
+    //     session()->flash('message', 'Course deleted successfully.');
+    //     $this->confirmingCourseDeletion = false;
+
+    //     // refresh list
+    //     $this->courses = Course::where('instructor_id', $user->id)->get();
+    // }
 
     public function render()
     {
