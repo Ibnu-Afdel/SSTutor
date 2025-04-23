@@ -36,6 +36,9 @@ class ManageContent extends Component
     public $editingLessonTitle = '';
     public $editingLessonContent = '';
     public $editingLessonVideoUrl = '';
+    public $confirmingDeleteSection = false ;
+    public $confirmingDeleteLesson = false;
+    public $titleToDeleted;
     protected function rules()
     {
         $rules = [];
@@ -180,6 +183,11 @@ class ManageContent extends Component
         $this->resetEditingStates();
     }
 
+    public function confirmDeleteSection(Section $section)
+    {
+        $this->titleToDeleted = $section->title;
+        return $this->confirmingDeleteSection =  $section->id;
+    }
     public function deleteSection(int $sectionId)
     {
         $section = Section::where('id', $sectionId)
@@ -187,10 +195,12 @@ class ManageContent extends Component
             ->first();
         if ($section) {
             $section->delete();
+            $this->confirmingDeleteSection = false;
             $this->loadSections(); // Refresh
             session()->flash('message', 'Section deleted successfully.');
         } else {
             session()->flash('error', 'Section not found or invalid for deletion.');
+            $this->confirmingDeleteSection = false;
         }
     }
 
@@ -289,16 +299,24 @@ class ManageContent extends Component
     //     $this->resetEditingStates();
     // }
 
+    public function confirmDeleteLesson(Lesson $lesson)
+    {
+        $this->titleToDeleted = $lesson->title;
+        return $this->confirmingDeleteLesson =  $lesson->id;
+    }
+
     public function deleteLesson(int $lessonId)
     {
         $lesson = Lesson::with('section')->find($lessonId);
 
         if ($lesson && $lesson->section->course_id == $this->course->id) {
             $lesson->delete();
+            $this->confirmingDeleteLesson = false;
             $this->loadSections();
             session()->flash('message', 'Lesson deleted successfully.');
         } else {
             session()->flash('error', 'Lesson not found or invalid.');
+            $this->confirmingDeleteLesson = false;
         }
         $this->resetEditingStates();
     }

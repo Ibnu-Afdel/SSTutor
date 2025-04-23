@@ -74,8 +74,8 @@
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                     Edit
                                 </button>
-                                <button wire:click="deleteSection({{ $section->id }})"
-                                    wire:confirm="Are you sure you want to delete this section and ALL its lessons? This cannot be undone."
+                                <button wire:click="confirmDeleteSection({{ $section->id }})"
+                                    {{-- wire:confirm="Are you sure you want to delete this section and ALL its lessons? This cannot be undone." --}}
                                     title="Delete Section"
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                     Delete
@@ -94,6 +94,31 @@
                         </div>
                     @endif
                 </div>
+
+                @if($confirmingDeleteSection)
+                <div class="fixed inset-0 z-10 overflow-y-auto">
+                    <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                        </div>
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Delete "{{ $titleToDeleted }}"</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">Are you sure you want to delete this course? This action cannot be undone.</p>
+                            </div>
+                            <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                                <button wire:click="deleteSection({{ $confirmingDeleteSection }})" type="button" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Delete
+                                </button>
+                                <button wire:click="$set('confirmingDeleteSection', false)" type="button" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
                 {{-- Lessons Area (Sortable Group) --}}
                 {{-- Use x-sortable, pass method name. Add group key attribute for JS --}}
@@ -184,8 +209,8 @@
                                                 class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                 Edit
                                             </button>
-                                            <button wire:click="deleteLesson({{ $lesson->id }})"
-                                                wire:confirm="Are you sure you want to delete this lesson?"
+                                            <button wire:click="confirmDeleteLesson({{ $lesson->id }})"
+                                                {{-- wire:confirm="Are you sure you want to delete this lesson?" --}}
                                                 title="Delete Lesson"
                                                 class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                                 Delete
@@ -209,6 +234,31 @@
                         @empty
                             <p class="text-xs italic text-gray-500">No lessons in this section yet.</p>
                         @endforelse
+
+                        @if($confirmingDeleteLesson)
+                        <div class="fixed inset-0 z-10 overflow-y-auto">
+                            <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                                </div>
+                                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                                <div class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                                    <h3 class="text-lg font-medium leading-6 text-gray-900">Delete "{{ $titleToDeleted }}" </h3>
+                                    <div class="mt-2">
+                                        <p class="text-sm text-gray-500">Are you sure you want to delete this course? This action cannot be undone.</p>
+                                    </div>
+                                    <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                                        <button wire:click="deleteLesson({{ $confirmingDeleteLesson }})" type="button" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                            Delete
+                                        </button>
+                                        <button wire:click="$set('confirmingDeleteLesson', false)" type="button" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                         <div class="pt-3 mt-3 border-t border-gray-300">
                             @if ($addingLessonToSectionId === $section->id)
