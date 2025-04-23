@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 
@@ -42,7 +43,7 @@ class Register extends Component
             'role' => 'student',  
         ]);
 
-        return redirect('/profile');
+        return redirect()->route('user.dashboard');
     }
     public function render()
     {
