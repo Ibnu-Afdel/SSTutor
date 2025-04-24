@@ -8,7 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Section extends Model
 {
-    protected $guarded = [];
+    // protected $guarded = [];
+    protected $fillable = [
+        'course_id',
+        'title',
+        'description',
+        'order',
+    ];
+    
 
     public function course(): BelongsTo
     {

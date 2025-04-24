@@ -12,7 +12,28 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class Course extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    // protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'discount',
+        'discount_type',
+        'discount_value',
+        'rating',
+        'price',
+        'original_price',
+        'duration',
+        'level',
+        'start_date',
+        'end_date',
+        'status',
+        'enrollment_limit',
+        'requirements',
+        'syllabus',
+        'instructor_id',
+    ];
+    
 
     protected $casts = [
         'start_date' => 'date',

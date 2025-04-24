@@ -10,7 +10,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Instructor extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    // protected $guarded = [];
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'bio',
+        'profile_picture',
+        'social_links',
+        'expertise',
+    ];
+    
 
     public function course() : HasMany
     {
