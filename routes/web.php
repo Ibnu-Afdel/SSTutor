@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\OAuthController;
 use App\Livewire\Course\CoursePlay;
 use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
@@ -24,32 +25,32 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', HomePage::class)->name('home');
 
-Route::get('/courses', CourseListing::class)->name('courses.index'); 
+Route::get('/courses', CourseListing::class)->name('courses.index');
 
-Route::get('/courses/{courseId}', CourseDetail::class)->name('course.detail'); 
+Route::get('/courses/{courseId}', CourseDetail::class)->name('course.detail');
 
 
 
 Route::middleware('instructor')->group(function () {
-    Route::get('/instructor/dashboard', InstructorDashboard::class)->name('instructor.dashboard'); 
-    Route::get('/instructor/courses', CourseManagement::class)->name('instructor.course_management'); 
-    Route::get('/instructor/courses/create', Create::class)->name('courses.create'); 
+    Route::get('/instructor/dashboard', InstructorDashboard::class)->name('instructor.dashboard');
+    Route::get('/instructor/courses', CourseManagement::class)->name('instructor.course_management');
+    Route::get('/instructor/courses/create', Create::class)->name('courses.create');
     Route::get('/instructor/courses/edit/{courseId}', Edit::class)->name('courses.edit');
     Route::get('/instructor/courses/{course}/manage-content', ManageContent::class)->name('instructor.manage_content');
 });
 
 
 Route::middleware(['admin'])->group(function () {
-    Route::get('user/admin/courses', ManageCourses::class)->name('admin.manage_courses'); 
-    Route::get('user/admin/users', ManageUsers::class)->name('admin.manage_users'); 
+    Route::get('user/admin/courses', ManageCourses::class)->name('admin.manage_courses');
+    Route::get('user/admin/users', ManageUsers::class)->name('admin.manage_users');
     Route::get('user/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('user.dashboard');
-    Route::get('/profile/{username}', Profile::class)->name('user.profile'); 
-    Route::get('/follow/{user}', Follow::class)->name('user.follow'); 
-    Route::get('/chat/{course}', Chat::class)->name('user.chat'); 
+    Route::get('/profile/{username}', Profile::class)->name('user.profile');
+    Route::get('/follow/{user}', Follow::class)->name('user.follow');
+    Route::get('/chat/{course}', Chat::class)->name('user.chat');
     Route::get('/courses/{course}/learn/{lesson?}', CoursePlay::class)->name('course-play');
     Route::get('/courses/{course}/chat', Chat::class)->name('course-chat');
 });
@@ -63,4 +64,5 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-
+Route::get('/auth/{provider}', [OAuthController::class, 'redirect']);
+Route::get('/auth/{provider}/callback', [OAuthController::class, 'callback']);
