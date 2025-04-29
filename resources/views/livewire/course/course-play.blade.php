@@ -272,6 +272,12 @@
                     <p class="mt-1 text-sm text-gray-500">Choose any lesson to begin learning.</p>
                 </div>
             @endif
+
+            @if ($currentLesson)
+    {{-- ...existing lesson content here... --}}
+
+        @livewire('course.lesson-comments', ['lesson' => $currentLesson], key('comments-' . $currentLesson->id))
+        @endif
         </main>
     </div>
 </div>
