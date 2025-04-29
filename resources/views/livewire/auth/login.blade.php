@@ -18,7 +18,7 @@
         <div class="space-y-4">
             <p class="text-sm font-medium text-center text-gray-500">Sign in quickly with</p>
 
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <a href="/auth/github"
                     class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-gray-800 border border-transparent rounded-lg shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                     <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -47,14 +47,7 @@
                     </svg>
                     Google
                 </a>
-                {{-- <a href="/auth/linkedin"
-                    class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-blue-700 border border-transparent rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 448 512" aria-hidden="true">
-                        <path
-                            d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.49 0 53.79A53.79 53.79 0 1 1 107.58 0c0 29.7-24.08 54.31-53.79 54.31zM447.8 448h-92.38V302.4c0-34.7-12.42-58.4-43.52-58.4-23.73 0-37.87 16-44.08 31.4-2.27 5.5-2.84 13.2-2.84 20.9V448h-92.38s1.23-268.2 0-296h92.38v41.9c12.3-19 34.3-46.1 83.6-46.1 61 0 106.7 39.9 106.7 125.6V448z" />
-                    </svg>
-                    LinkedIn
-                </a> --}}
+                {{-- LinkedIn Button Commented Out, get from register when needed --}}
             </div>
         </div>
 
@@ -113,28 +106,26 @@
                 @enderror
             </div>
 
-    </div>
+            <div>
+                <button type="submit"
+                    class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span wire:loading.remove wire:target="login">
+                        Sign In
+                    </span>
+                    <span wire:loading wire:target="login">
+                        <svg class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Signing In...
+                    </span>
+                </button>
+            </div>
+        </form>
 
-    <div>
-        <button type="submit"
-            class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            <span wire:loading.remove wire:target="login">
-                Sign In
-            </span>
-            <span wire:loading wire:target="login">
-                <svg class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                        stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                </svg>
-                Signing In...
-            </span>
-        </button>
     </div>
-    </form>
-
-</div>
 </div>
