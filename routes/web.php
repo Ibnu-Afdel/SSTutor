@@ -18,6 +18,7 @@ use App\Livewire\Auth\Register;
 use App\Livewire\User\Dashboard;
 use App\Livewire\Instructor\Dashboard as InstructorDashboard;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\InstructorApplicationForm;
 use App\Livewire\Course\Create;
 use App\Livewire\Course\Edit;
 use App\Livewire\Instructor\ManageContent;
@@ -29,6 +30,8 @@ Route::get('/courses', CourseListing::class)->name('courses.index');
 
 Route::get('/courses/{courseId}', CourseDetail::class)->name('course.detail');
 
+
+Route::get('/instructor/apply', InstructorApplicationForm::class)->name('instructor.apply');
 
 
 Route::middleware('instructor')->group(function () {

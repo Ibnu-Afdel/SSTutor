@@ -9,7 +9,7 @@
         <div>
             <h1 class="text-xl font-semibold text-gray-800 sm:text-2xl">Profile: {{ $user->name }}</h1>
             <p class="text-sm text-gray-500">Role: {{ ucfirst($user->role) }}</p>
-            <p class="text-sm text-gray-500">{{ucfirst('@' . $user->username) }}</p>
+            <p class="text-sm text-gray-500">{{ ucfirst('@' . $user->username) }}</p>
 
         </div>
     </div>
@@ -21,7 +21,7 @@
             {{ $user->email }}
         </p>
 
-        @if($user->role === 'student')
+        @if ($user->role === 'student')
             <div class="mt-4">
                 <h2 class="mb-2 font-medium text-gray-800">Enrolled Courses</h2>
                 <ul class="space-y-1 text-gray-600 list-disc list-inside">
@@ -32,6 +32,32 @@
                     @endforelse
                 </ul>
             </div>
+            @if (auth()->check() && auth()->id() === $user->id)
+                @php
+                    $application = \App\Models\InstructorApplication::where('user_id', $user->id)->latest()->first();
+                @endphp
+
+                @if ($application)
+                    <div class="p-4 mt-4 bg-gray-100 border rounded">
+                        <p class="text-sm font-medium">Instructor Application Status:
+                            <span
+                                class="px-2 py-1 text-white rounded 
+                    {{ $application->status === 'pending'
+                        ? 'bg-yellow-500'
+                        : ($application->status === 'approved'
+                            ? 'bg-green-600'
+                            : 'bg-red-600') }}">
+                                {{ ucfirst($application->status) }}
+                            </span>
+                        </p>
+                    </div>
+                @else
+                    <a href="{{ route('instructor.apply') }}"
+                        class="inline-block px-4 py-2 mt-4 text-white bg-indigo-600 rounded">
+                        Become an Instructor
+                    </a>
+                @endif
+            @endif
         @elseif($user->role === 'instructor')
             <div class="mt-4">
                 <h2 class="mb-2 font-medium text-gray-800">Your Courses</h2>

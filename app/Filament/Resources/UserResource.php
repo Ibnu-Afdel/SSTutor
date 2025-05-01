@@ -48,6 +48,11 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->colors([
+                        'primary' => 'pending',
+                        'success' => 'approved',
+                        'danger' => 'rejected',
+                    ])
                     ->searchable(),
                 Tables\Columns\TextColumn::make('username')
                     ->searchable(),
