@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('approved');
+            $table->boolean('is_pro')->default(false);
             $table->string('username')->unique();
             $table->string('name');
             $table->string('email')->unique();

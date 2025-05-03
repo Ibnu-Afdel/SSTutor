@@ -32,8 +32,9 @@ class Course extends Model
         'requirements',
         'syllabus',
         'instructor_id',
+        'is_pro'
     ];
-    
+
 
     protected $casts = [
         'start_date' => 'date',

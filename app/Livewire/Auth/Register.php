@@ -21,13 +21,13 @@ class Register extends Component
         'email' => 'required|email|unique:users,email',
         'password' => 'required|confirmed|min:6',
         'username' => [
-                    'required',
-                    'string',
-                    'min:3',
-                    'max:20',
-                    'unique:users,username',
-                    'regex:/^[a-zA-Z0-9_-]+$/', // ✅ no spaces, only letters, numbers, dash, underscore
-],
+            'required',
+            'string',
+            'min:3',
+            'max:20',
+            'unique:users,username',
+            'regex:/^[a-zA-Z0-9_-]+$/', // ✅ no spaces, only letters, numbers, dash, underscore
+        ],
 
     ];
 
@@ -40,7 +40,9 @@ class Register extends Component
             'username' => $this->username,
             'email' => $this->email,
             'password' => Hash::make($this->password),
-            'role' => 'student',  
+            'role' => 'student',
+            'status' => 'approved',
+            'is_pro' => false,
         ]);
 
         return redirect()->route('user.dashboard');

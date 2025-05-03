@@ -36,6 +36,9 @@ class OAuthController extends Controller
                 'password' => bcrypt(uniqid()),
                 // 'provider' => $provider,
                 // 'provider_id' => $socialUser->getId(),
+                'role' => 'student',
+                'status' => 'approved',
+                'is_pro' => false,
             ]
         );
         Auth::login($user);

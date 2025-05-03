@@ -30,12 +30,13 @@ class User extends Authenticatable
     protected $fillable = [
         'role',
         'status',
+        'is_pro',
         'username',
         'name',
         'email',
         'password',
     ];
-    
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -107,7 +108,7 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function comments():HasMany
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
