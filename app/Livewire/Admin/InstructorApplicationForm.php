@@ -10,9 +10,11 @@ class InstructorApplicationForm extends Component
 {
     public $full_name, $email, $phone_number, $date_of_birth, $adress, $webiste, $linkedin,
         $resume, $higest_qualification, $current_ocupation, $reason;
+    public $existingApplication;
 
     public function mount()
     {
+        $this->existingApplication = InstructorApplication::where('user_id', auth()->id())->latest()->first();
         $this->email = Auth::user()->email;
         $this->full_name = Auth::user()->name;
     }
@@ -25,13 +27,14 @@ class InstructorApplicationForm extends Component
             'phone_number' => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
             'adress' => 'nullable|string|max:255',
-            'webiste' => 'nullable|string|max:255',
-            'linkedin' => 'nullable|string|max:255',
+            'webiste' => 'nullable|url|max:255',
+            'linkedin' => 'nullable|url|max:255',
             'resume' => 'required|string',
             'higest_qualification' => 'nullable|string|max:255',
             'current_ocupation' => 'nullable|string|max:255',
             'reason' => 'required|string',
         ]);
+
 
 
         InstructorApplication::create([

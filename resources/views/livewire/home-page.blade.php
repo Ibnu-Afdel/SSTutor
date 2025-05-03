@@ -56,11 +56,7 @@
                     Study anytime, on any device, and track your progress seamlessly.
                 </p>
             </div>
-            @auth
-                <div>
-                    @livewire('admin.instructor-application')
-                </div>
-            @endauth
+
         </div>
     </section>
 </div>

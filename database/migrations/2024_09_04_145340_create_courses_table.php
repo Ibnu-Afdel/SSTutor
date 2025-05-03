@@ -18,8 +18,8 @@ return new class extends Migration
             $table->text('description');
             $table->string('image')->nullable();
             $table->boolean('discount')->default(false);
-            $table->enum('discount_type', ['percent', 'amount'])->nullable(); // Add discount_type
-            $table->decimal('discount_value', 8, 2)->nullable(); // Add discount_value
+            $table->enum('discount_type', ['percent', 'amount'])->nullable();
+            $table->decimal('discount_value', 8, 2)->nullable();
             $table->decimal('rating', 2, 1)->nullable();
             $table->decimal('price', 8, 2)->nullable();
             $table->decimal('original_price', 8, 2)->nullable();
@@ -33,9 +33,9 @@ return new class extends Migration
             $table->longText('syllabus')->nullable();
             // $table->foreignIdFor(Instructor::class)->constrained()->cascadeOnDelete();  
 
-            $table->foreignId('instructor_id') 
-            ->constrained('users')               
-            ->cascadeOnDelete();                
+            $table->foreignId('instructor_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User;
 
+use App\Models\InstructorApplication;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -17,7 +18,7 @@ class Profile extends Component
     {
         $this->user = $this->user = User::where('username', $username)->firstOrFail();
         // Auth::user()->where('username', $username)->firstOrFail();
-        
+
         if ($this->user->role == 'student') {
             $this->enrolledCourses = $this->user->enrollments->pluck('course');
         } elseif ($this->user->role == 'instructor') {
