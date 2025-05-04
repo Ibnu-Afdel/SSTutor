@@ -24,6 +24,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
+    'chapa' => [
+        'secret_key' => env('CHAPA_SECRET_KEY'),
+        'base_url' => env('CHAPA_BASE_URL', 'https://api.chapa.co/v1'),
+    ],
+
 
     // 'linkedin' => [
     //     'client_id' => env('LINKEDIN_CLIENT_ID'),

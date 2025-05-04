@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\OAuthController;
+use App\Http\Controllers\ChapaController;
 use App\Livewire\Course\CoursePlay;
 use App\Livewire\HomePage;
 use App\Livewire\Subscriptions\ManualPayment;
@@ -49,9 +50,14 @@ Route::middleware(['admin'])->group(function () {
     Route::get('user/admin/courses', ManageCourses::class)->name('admin.manage_courses');
     Route::get('user/admin/users', ManageUsers::class)->name('admin.manage_users');
     Route::get('user/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
-});
+    Route::get('/admin/subscriptions', ManageSubscriptions::class)->name('admin.subscriptions'); // for now.. i will change it to filament in near future
 
-Route::get('/admin/subscriptions', ManageSubscriptions::class)->name('admin.subscriptions'); // for now.. i will change it to filament in near future
+});
+Route::get('/subscribe', function () {
+    return view('subscribe');
+})->middleware('auth');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('user.dashboard');
@@ -63,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/subscribe/manual', ManualPayment::class)->name('subscribe.manual');
 });
 
+Route::get('/chapa/callback', [ChapaController::class, 'callback'])->name('chapa.callback');
 
 
 Route::get('/login', Login::class)->name('login')->middleware('guest');
@@ -74,3 +81,7 @@ Route::post('/logout', function () {
 
 Route::get('/auth/{provider}', [OAuthController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [OAuthController::class, 'callback']);
+
+Route::fallback(function () {
+    return response('Route not found. Available routes: ' . implode(', ', \Illuminate\Support\Facades\Route::getRoutes()->getRoutesByMethod()['GET']), 404);
+});

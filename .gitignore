@@ -19,3 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 /resources/views/livewire/instructor/deleted.txt
+/app/Http/Controllers/ChapaController0.php
+/app/Livewire/SubscribeWithChapa-Log.php
