@@ -17,8 +17,17 @@ class ManualPayment extends Component
     public $notes;
 
     public array $plans = [
-        'monthly' => ['label' => 'Monthly - 200 ETB', 'amount' => 200, 'duration' => 30],
-        'yearly' => ['label' => 'Yearly - 2000 ETB', 'amount' => 2000, 'duration' => 365],
+        'monthly' => [
+            'label' => 'Monthly - 200 ETB',
+            'amount' => 200,
+            'duration' => 30
+        ],
+
+        'yearly' => [
+            'label' => 'Yearly - 2000 ETB',
+            'amount' => 2000,
+            'duration' => 365
+        ],
     ];
 
     public function submit()
