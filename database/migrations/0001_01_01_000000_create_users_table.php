@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('approved');
-            $table->boolean('is_pro')->default(false);
             $table->string('username')->unique();
             $table->string('name');
             $table->string('email')->unique();
+            $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('approved');
+            $table->boolean('is_pro')->default(false);
+            $table->datetime('pro_expires_at')->nullable();
+            $table->enum('subscription_type', ['manual', 'chapa', 'arifpay'])->default('manual');
+            $table->enum('subscription_status', ['active', 'pending', 'expired', 'rejected'])->default('expired');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

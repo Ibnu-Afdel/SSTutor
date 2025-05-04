@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\OAuthController;
 use App\Livewire\Course\CoursePlay;
 use App\Livewire\HomePage;
+use App\Livewire\Subscriptions\ManualPayment;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\ManageCourses;
 use App\Livewire\Admin\ManageUsers;
@@ -19,6 +20,7 @@ use App\Livewire\User\Dashboard;
 use App\Livewire\Instructor\Dashboard as InstructorDashboard;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\InstructorApplicationForm;
+use App\Livewire\Admin\ManageSubscriptions;
 use App\Livewire\Course\Create;
 use App\Livewire\Course\Edit;
 use App\Livewire\Instructor\ManageContent;
@@ -49,6 +51,8 @@ Route::middleware(['admin'])->group(function () {
     Route::get('user/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
 });
 
+Route::get('/admin/subscriptions', ManageSubscriptions::class)->name('admin.subscriptions'); // for now.. i will change it to filament in near future
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('user.dashboard');
     Route::get('/profile/{username}', Profile::class)->name('user.profile');
@@ -56,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/{course}', Chat::class)->name('user.chat');
     Route::get('/courses/{course}/learn/{lesson?}', CoursePlay::class)->name('course-play');
     Route::get('/courses/{course}/chat', Chat::class)->name('course-chat');
+    Route::get('/subscribe/manual', ManualPayment::class)->name('subscribe.manual');
 });
 
 
