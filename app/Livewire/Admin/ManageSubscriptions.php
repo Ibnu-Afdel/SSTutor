@@ -17,7 +17,6 @@ class ManageSubscriptions extends Component
         $startDate = now();
         $expiresAt = now()->addDays($subscription->duration_in_days);
 
-        // Update subscription
         $subscription->update([
             'status' => 'active',
             'starts_at' => $startDate,
@@ -25,7 +24,6 @@ class ManageSubscriptions extends Component
             'paid_at' => now(),
         ]);
 
-        // Update user
         $user = $subscription->user;
         $user->update([
             'is_pro' => true,
@@ -51,7 +49,10 @@ class ManageSubscriptions extends Component
     }
     public function render()
     {
-        $subscriptions = Subscription::where('status', 'pending')->latest()->get();
+        $subscriptions = Subscription::where('status', 'pending')
+            ->where('payment_method', 'manual')
+            ->latest()
+            ->get();
         return view('livewire.admin.manage-subscriptions', [
             'subscriptions' => $subscriptions,
         ]);
