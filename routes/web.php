@@ -55,7 +55,7 @@ Route::middleware(['admin'])->group(function () {
 });
 Route::get('/subscribe', function () {
     return view('subscribe');
-})->middleware('auth');
+})->middleware('auth')->name('subscribe.index');
 
 
 
