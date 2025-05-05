@@ -53,7 +53,8 @@
 
     <div class="flex flex-col md:flex-row">
 
-        <aside class="w-full p-6 bg-white border-r border-gray-200 md:w-1/4 lg:w-1/5 md:min-h-screen md:shadow-sm">
+        <aside
+            class="w-full p-6 bg-white border-r border-gray-200 md:w-1/4 lg:w-1/5 md:sticky md:top-4 md:max-h-[calc(100vh-5rem)] md:overflow-y-auto  md:shadow-sm">
             <h2 class="flex items-center mb-5 text-sm font-semibold tracking-wider text-gray-500 uppercase">
                 <i class="mr-2 text-gray-400 fas fa-list-ul"></i>
                 Course Content
