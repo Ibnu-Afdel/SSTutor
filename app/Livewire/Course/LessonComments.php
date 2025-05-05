@@ -11,10 +11,16 @@ class LessonComments extends Component
 {
     public Lesson $lesson;
     public string $body = '';
+    public ?int $parentId = null;
 
     protected $rules = [
         'body' => 'required|string|min:2|max:1000'
     ];
+
+    public function mount(Lesson $lesson)
+    {
+        $this->lesson = $lesson;
+    }
 
     public function save()
     {
@@ -23,16 +29,28 @@ class LessonComments extends Component
         Comment::create([
             'lesson_id' => $this->lesson->id,
             'user_id' => Auth::id(),
-            'body' => $this->body
+            'body' => $this->body,
+            'parent_id' => $this->parentId
         ]);
 
-        $this->reset('body');
+        $this->reset(['body', 'parentId']);
+    }
+
+    public function replyTo($commentId)
+    {
+        $this->parentId = $commentId;
     }
 
     public function render()
     {
+        $comments = $this->lesson->comments()
+            ->whereNull('parent_id')
+            ->with('user', 'replies.user')
+            ->get();
+
+
         return view('livewire.course.lesson-comments', [
-            'comments' => $this->lesson->comments()->with('user')->get(),
+            'comments' => $comments,
         ]);
     }
 }

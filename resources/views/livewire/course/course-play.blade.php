@@ -21,10 +21,10 @@
                 const videoElement = document.querySelector('#plyr-video');
                 if (videoElement) {
                     if (playerInstance) {
-                        playerInstance.destroy(); 
+                        playerInstance.destroy();
                     }
                     playerInstance = new Plyr(videoElement);
-                  
+
                 }
             }
 
@@ -46,10 +46,10 @@
     </div>
     <a href="{{ route('course.detail', ['courseId' => $course->id]) }}"
         class="inline-flex items-center px-4 pb-2 font-medium text-gray-700 transition text-md">
-         <i class="mr-2 text-gray-500 fas fa-arrow-left"></i>
-         Back
-     </a>
-     
+        <i class="mr-2 text-gray-500 fas fa-arrow-left"></i>
+        Back
+    </a>
+
 
     <div class="flex flex-col md:flex-row">
 
@@ -74,25 +74,22 @@
                                         wire:target="selectLesson({{ $lesson->id }})"
                                         class="flex items-center justify-between px-3 py-2 text-sm rounded-r cursor-pointer group transition duration-150 ease-in-out
                                         {{ $currentLesson && $currentLesson->id === $lesson->id
-                                            ? 'bg-indigo-100 text-indigo-800 font-semibold border-l-2 border-indigo-500 -ml-px' 
-                                            : 'text-gray-700 hover:bg-gray-100'  }}
+                                            ? 'bg-indigo-100 text-indigo-800 font-semibold border-l-2 border-indigo-500 -ml-px'
+                                            : 'text-gray-700 hover:bg-gray-100' }}
                                         {{ in_array($lesson->id, $completedLessons) && !($currentLesson && $currentLesson->id === $lesson->id)
-                                            ? 'text-green-700 hover:bg-green-50' 
+                                            ? 'text-green-700 hover:bg-green-50'
                                             : '' }}">
 
                                         <span class="flex items-center">
 
                                             @if ($currentLesson && $currentLesson->id === $lesson->id)
                                                 <i class="mr-2 text-indigo-600 fas fa-play-circle fa-fw"></i>
-
-                                                @elseif (in_array($lesson->id, $completedLessons))
+                                            @elseif (in_array($lesson->id, $completedLessons))
                                                 <i class="mr-2 text-green-500 fas fa-check-circle fa-fw"></i>
-
-                                                @else
+                                            @else
                                                 <i
                                                     class="mr-2 text-gray-400 group-hover:text-gray-600 far fa-circle fa-fw"></i>
-
-                                                @endif
+                                            @endif
                                             {{ $lesson->title }}
                                         </span>
 
@@ -120,7 +117,7 @@
         <main class="w-full p-6 md:p-8 md:w-3/4 lg:w-4/5 bg-gray-50">
             @if ($currentLesson)
 
-            <h2 class="mb-6 text-3xl font-bold text-gray-800">{{ $currentLesson->title }}</h2>
+                <h2 class="mb-6 text-3xl font-bold text-gray-800">{{ $currentLesson->title }}</h2>
 
                 @if (session()->has('error'))
                     <div class="relative px-4 py-3 mb-6 text-red-800 bg-red-100 border border-red-300 rounded shadow-sm"
@@ -274,10 +271,10 @@
             @endif
 
             @if ($currentLesson)
-    {{-- ...existing lesson content here... --}}
+                {{-- ...existing lesson content here... --}}
 
-        @livewire('course.lesson-comments', ['lesson' => $currentLesson], key('comments-' . $currentLesson->id))
-        @endif
+                @livewire('course.lesson-comments', ['lesson' => $currentLesson], key('comments' . $currentLesson->id))
+            @endif
         </main>
     </div>
 </div>

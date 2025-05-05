@@ -29,7 +29,7 @@ class Lesson extends Model
             ->withTimestamps();
     }
 
-    public function comments():HasMany
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class)->latest();
     }

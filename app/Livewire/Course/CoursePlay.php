@@ -105,6 +105,10 @@ class CoursePlay extends Component
 
     public function render()
     {
-        return view('livewire.course.course-play');
+        $comments = $this->currentLesson?->comments()->with('user')->get() ?? collect();
+
+        return view('livewire.course.course-play', [
+            'comments' => $comments,
+        ]);
     }
 }
