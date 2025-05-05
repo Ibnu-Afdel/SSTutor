@@ -35,7 +35,7 @@ class Register extends Component
     {
         $this->validate();
 
-        User::create([
+        $user = User::create([
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,
@@ -45,6 +45,7 @@ class Register extends Component
             'is_pro' => false,
         ]);
 
+        Auth::login($user);
         return redirect()->route('user.profile', ['username' => auth()->user()->username]);
     }
     public function render()
