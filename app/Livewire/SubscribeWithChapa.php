@@ -50,7 +50,7 @@ class SubscribeWithChapa extends Component
                     $now = new \DateTime();
                     $daysDiff = $now->diff($expiryDate)->days; // btw, $startDate->diff($endDate) => It calculates the difference from $startDate to $endDate.
 
-                    if ($daysDiff <= 30) {
+                    if ($daysDiff <= 3) {
                         $this->showExtendOption = true;
                     }
                 }

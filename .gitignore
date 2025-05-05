@@ -22,3 +22,6 @@ yarn-error.log
 /resources/views/livewire/subscribe-with-chapa.test.blade.php
 /app/Http/Controllers/ChapaController0.php
 /app/Livewire/SubscribeWithChapa-Log.php
+
+/resources/views/livewire/subscriptions/manual-payment.test.blade.php
+/app/Livewire/Subscriptions/ManualPayment-test.php
