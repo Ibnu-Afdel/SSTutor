@@ -45,9 +45,9 @@
                 <i class="w-5 mr-2 text-center text-indigo-500 fas fa-envelope fa-fw"></i>{{ $user->email }}
             </p>
 
-            @if ($user->role !== 'admin')
+            @if ($user->role === 'instructor')
 
-                @if ($application->status === 'approved')
+                @if ($application && $application->status === 'approved')
                     <div class="p-4 mt-2 space-y-2 border border-gray-200 rounded-md bg-gray-50/50">
 
 
