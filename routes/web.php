@@ -49,7 +49,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('user/admin/courses', ManageCourses::class)->name('admin.manage_courses');
     Route::get('user/admin/users', ManageUsers::class)->name('admin.manage_users');
     Route::get('user/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
-    Route::get('/admin/subscriptions', ManageSubscriptions::class)->name('admin.subscriptions'); // for now.. i will change it to filament in near future
+    Route::get('user/admin/subscriptions', ManageSubscriptions::class)->name('admin.subscriptions'); // for now.. i will change it to filament in near future
 
 });
 Route::get('/subscribe', function () {
