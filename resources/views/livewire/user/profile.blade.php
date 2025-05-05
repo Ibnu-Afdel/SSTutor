@@ -45,11 +45,49 @@
                 <i class="w-5 mr-2 text-center text-indigo-500 fas fa-envelope fa-fw"></i>{{ $user->email }}
             </p>
 
+            @if ($user->role !== 'admin')
+
+                @if ($application->status === 'approved')
+                    <div class="p-4 mt-2 space-y-2 border border-gray-200 rounded-md bg-gray-50/50">
+
+
+                        @if (!empty($application->full_name))
+                            <p class="text-sm"><i
+                                    class="w-5 mr-2 text-center text-gray-400 fas fa-user-circle fa-fw"></i>{{ $application->full_name }}
+                            </p>
+                        @endif
+                        @if (!empty($application->email))
+                            <p class="text-sm"><i
+                                    class="w-5 mr-2 text-center text-gray-400 fas fa-envelope-open fa-fw"></i>{{ $application->email }}
+                            </p>
+                        @endif
+                        @if (!empty($application->website))
+                            <p class="text-sm"><i class="w-5 mr-2 text-center text-gray-400 fas fa-globe fa-fw"></i><a
+                                    href="{{ $application->website }}" target="_blank" rel="noopener noreferrer"
+                                    class="text-indigo-600 hover:underline">{{ $application->website }}</a></p>
+                        @endif
+                        @if (!empty($application->linkedin))
+                            <p class="text-sm"><i
+                                    class="w-5 mr-2 text-center text-gray-400 fab fa-linkedin fa-fw"></i><a
+                                    href="{{ $application->linkedin }}" target="_blank" rel="noopener noreferrer"
+                                    class="text-indigo-600 hover:underline">{{ $application->linkedin }}</a>
+                            </p>
+                        @endif
+                        @if (isset($application->highest_qualification) && $application->highest_qualification !== 'none')
+                            <p class="text-sm"><i
+                                    class="w-5 mr-2 text-center text-gray-400 fas fa-graduation-cap fa-fw"></i>{{ $application->highest_qualification }}
+                            </p>
+                        @endif
+                    </div>
+
+                @endif
+            @endif
+
         </div>
 
         <div class="mb-6 border-t pt-4 {{ $user->is_pro ? 'border-amber-200' : 'border-gray-200' }}">
 
-            @if ($user->role === 'student')
+            @if (auth()->check() && auth()->id() === $user->id && $user->role === 'student')
                 <h3 class="mb-2 text-sm font-semibold text-gray-500 uppercase">Student Details</h3>
                 <div class="mb-6">
                     <h4 class="mb-2 font-semibold text-gray-800"><i
@@ -71,75 +109,39 @@
                     @endisset
                 </div>
 
-                @if (auth()->check() && auth()->id() === $user->id)
-                    <h4 class="mb-2 font-semibold text-gray-800"><i
-                            class="w-5 mr-2 text-center text-purple-500 fas fa-chalkboard-teacher fa-fw"></i>Instructor
-                        Status</h4>
-                    @php
-                        if (!isset($application)) {
-                            $application = class_exists(\App\Models\InstructorApplication::class)
-                                ? \App\Models\InstructorApplication::where('user_id', $user->id)->latest()->first()
-                                : null;
-                        }
-                    @endphp
+                <h4 class="mb-2 font-semibold text-gray-800"><i
+                        class="w-5 mr-2 text-center text-purple-500 fas fa-chalkboard-teacher fa-fw"></i>Instructor
+                    Status</h4>
 
-                    @if ($application)
-                        <div class="p-4 mt-2 space-y-2 border border-gray-200 rounded-md bg-gray-50/50">
 
-                            <p class="text-sm font-semibold">
-                                <i class="w-5 mr-1 text-center text-gray-500 fas fa-clipboard-check fa-fw"></i>
-                                Application Status:
-                                <span @class([
-                                    'px-2 py-0.5 text-xs text-white rounded ml-1',
-                                    'bg-yellow-500' => $application->status === 'pending',
-                                    'bg-green-600' => $application->status === 'approved',
-                                    'bg-red-600' => $application->status === 'rejected',
-                                ])>
-                                    {{ ucfirst($application->status) }}
-                                </span>
-                            </p>
+                @if ($application)
+                    <div class="p-4 mt-2 space-y-2 border border-gray-200 rounded-md bg-gray-50/50">
 
-                            @if (!empty($application->full_name))
-                                <p class="text-sm"><i
-                                        class="w-5 mr-2 text-center text-gray-400 fas fa-user-circle fa-fw"></i>{{ $application->full_name }}
-                                </p>
-                            @endif
-                            @if (!empty($application->email))
-                                <p class="text-sm"><i
-                                        class="w-5 mr-2 text-center text-gray-400 fas fa-envelope-open fa-fw"></i>{{ $application->email }}
-                                </p>
-                            @endif
-                            @if (!empty($application->website))
-                                <p class="text-sm"><i
-                                        class="w-5 mr-2 text-center text-gray-400 fas fa-globe fa-fw"></i><a
-                                        href="{{ $application->website }}" target="_blank" rel="noopener noreferrer"
-                                        class="text-indigo-600 hover:underline">{{ $application->website }}</a></p>
-                            @endif
-                            @if (!empty($application->linkedin))
-                                <p class="text-sm"><i
-                                        class="w-5 mr-2 text-center text-gray-400 fab fa-linkedin fa-fw"></i><a
-                                        href="{{ $application->linkedin }}" target="_blank" rel="noopener noreferrer"
-                                        class="text-indigo-600 hover:underline">{{ $application->linkedin }}</a></p>
-                            @endif
-                            @if (isset($application->highest_qualification) && $application->highest_qualification !== 'none')
-                                <p class="text-sm"><i
-                                        class="w-5 mr-2 text-center text-gray-400 fas fa-graduation-cap fa-fw"></i>{{ $application->highest_qualification }}
-                                </p>
-                            @endif
-                        </div>
+                        <p class="text-sm font-semibold">
+                            <i class="w-5 mr-1 text-center text-gray-500 fas fa-clipboard-check fa-fw"></i>
+                            Application Status:
+                            <span @class([
+                                'px-2 py-0.5 text-xs text-white rounded ml-1',
+                                'bg-yellow-500' => $application->status === 'pending',
+                                'bg-green-600' => $application->status === 'approved',
+                                'bg-red-600' => $application->status === 'rejected',
+                            ])>
+                                {{ ucfirst($application->status) }}
+                            </span>
+                        </p>
+                    </div>
+                @else
+                    @if (Route::has('instructor.apply'))
+                        <a href="{{ route('instructor.apply') }}"
+                            class="inline-flex items-center gap-2 px-4 py-2 mt-2 text-sm text-white transition bg-indigo-600 rounded-md hover:bg-indigo-700">
+                            <i class="fas fa-plus-circle"></i>Become an Instructor
+                        </a>
                     @else
-                        @if (Route::has('instructor.apply'))
-                            <a href="{{ route('instructor.apply') }}"
-                                class="inline-flex items-center gap-2 px-4 py-2 mt-2 text-sm text-white transition bg-indigo-600 rounded-md hover:bg-indigo-700">
-                                <i class="fas fa-plus-circle"></i>Become an Instructor
-                            </a>
-                        @else
-                            <p class="mt-2 text-sm italic text-gray-500">Instructor applications are currently closed.
-                            </p>
-                        @endif
+                        <p class="mt-2 text-sm italic text-gray-500">Instructor applications are currently closed.
+                        </p>
                     @endif
                 @endif
-            @elseif ($user->role === 'instructor')
+            @elseif (auth()->check() && auth()->id() === $user->id && $user->role === 'instructor')
                 <h3 class="mb-2 text-sm font-semibold text-gray-500 uppercase">Instructor Details</h3>
                 <div class="mb-6">
                     <h4 class="mb-2 font-semibold text-gray-800"><i
@@ -159,7 +161,7 @@
                         <p class="italic text-gray-400">Instructor course data not available.</p>
                     @endisset
                 </div>
-            @elseif ($user->role === 'admin')
+            @elseif (auth()->check() && auth()->id() === $user->id && $user->role === 'admin')
                 <h3 class="mb-2 text-sm font-semibold text-gray-500 uppercase">Admin Details</h3>
                 <p class="text-gray-600"><i class="w-5 mr-2 text-center text-red-500 fas fa-user-shield fa-fw"></i>This
                     user has administrative privileges.</p>

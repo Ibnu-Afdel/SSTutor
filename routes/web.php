@@ -34,7 +34,6 @@ Route::get('/courses', CourseListing::class)->name('courses.index');
 Route::get('/courses/{courseId}', CourseDetail::class)->name('course.detail');
 
 
-Route::get('/instructor/apply', InstructorApplicationForm::class)->name('instructor.apply');
 
 
 Route::middleware('instructor')->group(function () {
@@ -67,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/courses/{course}/learn/{lesson?}', CoursePlay::class)->name('course-play');
     Route::get('/courses/{course}/chat', Chat::class)->name('course-chat');
     Route::get('/subscribe/manual', ManualPayment::class)->name('subscribe.manual');
+    Route::get('/instructor/apply', InstructorApplicationForm::class)->name('instructor.apply');
 });
 
 Route::get('/chapa/callback', [ChapaController::class, 'callback'])->name('chapa.callback');

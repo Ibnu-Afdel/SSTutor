@@ -42,7 +42,7 @@ class OAuthController extends Controller
             ]
         );
         Auth::login($user);
-        return redirect()->intended('/dashboard');
+        return redirect()->intended(route('user.profile', ['username' => auth()->user()->username]));
     }
 
     protected function generateUsername($socialUser)

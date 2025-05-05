@@ -17,16 +17,16 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('full_name');
             $table->string('email')->unique();
-            $table->string('phone_number')->nullable();
-            $table->date('date_of_birth')->nullable();
+            $table->string('phone_number');
+            $table->date('date_of_birth');
             $table->string('adress')->nullable();
             $table->string('webiste')->nullable();
-            $table->string('linkedin')->nullable();
-            $table->text('resume');
-            $table->string('higest_qualification')->nullable();
-            $table->string('current_ocupation')->nullable();
-            $table->text('reason');
-            $table->enum('status', ['pending', 'approved', 'rejected']);
+            $table->string('linkedin');
+            $table->text('resume')->nullable();
+            $table->string('higest_qualification');
+            $table->string('current_ocupation');
+            $table->text('reason')->nullable();
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

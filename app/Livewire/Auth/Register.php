@@ -45,7 +45,7 @@ class Register extends Component
             'is_pro' => false,
         ]);
 
-        return redirect()->route('user.dashboard');
+        return redirect()->route('user.profile', ['username' => auth()->user()->username]);
     }
     public function render()
     {

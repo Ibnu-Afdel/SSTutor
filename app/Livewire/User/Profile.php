@@ -29,6 +29,14 @@ class Profile extends Component
 
     public function render()
     {
-        return view('livewire.user.profile');
+        // if (!isset($application)) {
+        //     $application = class_exists(\App\Models\InstructorApplication::class)
+        //         ? \App\Models\InstructorApplication::where('user_id', $user->id)->latest()->first()
+        //         : null;
+        // }
+        $application = InstructorApplication::where('user_id', $this->user->id)->latest()->first();
+        return view('livewire.user.profile', [
+            'application' => $application
+        ]);
     }
 }

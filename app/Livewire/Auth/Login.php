@@ -21,7 +21,7 @@ class Login extends Component
         $this->validate();
 
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            return redirect()->intended('/dashboard');
+            return redirect()->intended(route('user.profile', ['username' => auth()->user()->username]));
         } else {
             session()->flash('error', 'Invalid login details');
         }

@@ -24,15 +24,14 @@ class InstructorApplicationForm extends Component
         $this->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email',
-            'phone_number' => 'nullable|string|max:20',
-            'date_of_birth' => 'nullable|date',
+            'phone_number' => 'required|string|max:20',
+            'date_of_birth' => 'required|date',
             'adress' => 'nullable|string|max:255',
             'webiste' => 'nullable|url|max:255',
-            'linkedin' => 'nullable|url|max:255',
-            'resume' => 'required|string',
-            'higest_qualification' => 'nullable|string|max:255',
-            'current_ocupation' => 'nullable|string|max:255',
-            'reason' => 'required|string',
+            'linkedin' => 'required|url|max:255',
+            'higest_qualification' => 'required|string|in:None,Diploma,Bachelor\'s,Master\'s,PhD',
+            'current_ocupation' => 'required|string|in:Student,Freelancer,Full-time Job,Part-time Job,Unemployed',
+            'reason' => 'nullable|string',
         ]);
 
 
@@ -46,7 +45,7 @@ class InstructorApplicationForm extends Component
             'adress' => $this->adress,
             'webiste' => $this->webiste,
             'linkedin' => $this->linkedin,
-            'resume' => $this->resume,
+            'resume' => '',
             'higest_qualification' => $this->higest_qualification,
             'current_ocupation' => $this->current_ocupation,
             'reason' => $this->reason,
@@ -54,7 +53,7 @@ class InstructorApplicationForm extends Component
         ]);
 
         session()->flash('success', 'Your application has been submitted!');
-        return redirect()->route('home');
+        return redirect()->route('user.profile', ['username' => auth()->user()->username]);
     }
 
     public function render()
