@@ -9,9 +9,12 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\DB;
 
 class SubscriptionResource extends Resource
 {
@@ -83,10 +86,98 @@ class SubscriptionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'active' => 'Active',
+                        'expired' => 'Expired',
+                        'rejected' => 'Rejected',
+                        'cancelled' => 'Cancelled',
+                    ])
+                    ->default('pending'),
+
+                SelectFilter::make('payment_method')
+                    ->options([
+                        'manual' => 'Manual',
+                        'chapa' => 'Chapa',
+                        'arifpay' => 'ArifPay',
+                    ])
+                    ->default('manual'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Action::make('approve')
+                    ->label('Approve')
+                    ->color('success')
+                    ->icon('heroicon-o-check-circle')
+                    ->requiresConfirmation()
+                    ->action(function (Subscription $record) {
+                        DB::transaction(function () use ($record) {
+                            $startDate = now();
+                            $expiresAt = now()->addDays($record->duration_in_days);
+
+
+                            $record->update([
+                                'status' => 'active',
+                                'starts_at' => $startDate,
+                                'expires_at' => $expiresAt,
+                                'paid_at' => now(),
+                                // will add admin note automatically
+                                // 'notes' => ($record->notes ? $record->notes . "\n" : '') . 'Approved by admin on ' . now()->toDateTimeString(),
+                            ]);
+
+
+                            $user = $record->user;
+                            $user->update([
+                                'is_pro' => true,
+                                'pro_expires_at' => $expiresAt,
+                                'subscription_type' => $record->payment_method,
+                                'subscription_status' => 'active',
+                            ]);
+                        });
+                        \Filament\Notifications\Notification::make()
+                            ->title('Subscription Approved')
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn(Subscription $record): bool => $record->status === 'pending' && $record->payment_method === 'manual'),
+
+                Action::make('reject')
+                    ->label('Reject')
+                    ->color('danger')
+                    ->icon('heroicon-o-x-circle')
+                    ->requiresConfirmation()
+
+                    ->form([
+                        Forms\Components\Textarea::make('notes')
+                            ->label('Rejection Reason (Optional)')
+                            ->helperText('This note will be saved on the subscription record.'),
+                    ])
+                    ->action(function (Subscription $record, array $data) {
+                        DB::transaction(function () use ($record, $data) {
+
+                            $rejectionNote = $data['notes'] ?? 'Payment rejected by admin.';
+                            $record->update([
+                                'status' => 'rejected',
+                                'notes' => ($record->notes ? $record->notes . "\n" : '') . $rejectionNote,
+                            ]);
+
+
+                            $user = $record->user;
+
+                            if ($user->subscription_status !== 'active' || $user->pro_expires_at <= now()) {
+                                $user->update([
+                                    'is_pro' => false,
+                                    'subscription_status' => 'rejected',
+                                ]);
+                            } else {
+                            }
+                        });
+                        \Filament\Notifications\Notification::make()
+                            ->title('Subscription Rejected')
+                            ->success()
+                            ->send();
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
