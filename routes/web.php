@@ -48,7 +48,7 @@ Route::middleware('instructor')->group(function () {
 Route::middleware(['admin'])->group(function () {
     Route::get('user/admin/courses', ManageCourses::class)->name('admin.manage_courses');
     Route::get('user/admin/users', ManageUsers::class)->name('admin.manage_users');
-    Route::get('user/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
+    // Route::get('user/admin/dashboard', AdminDashboard::class)->name('user.admin.dashboard');
     Route::get('user/admin/subscriptions', ManageSubscriptions::class)->name('admin.subscriptions'); // for now.. i will change it to filament in near future
 
 });
@@ -82,6 +82,6 @@ Route::post('/logout', function () {
 Route::get('/auth/{provider}', [OAuthController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [OAuthController::class, 'callback']);
 
-Route::fallback(function () {
-    return response('Route not found. Available routes: ' . implode(', ', \Illuminate\Support\Facades\Route::getRoutes()->getRoutesByMethod()['GET']), 404);
-});
+// Route::fallback(function () {
+//     return response('Route not found. Available routes: ' . implode(', ', \Illuminate\Support\Facades\Route::getRoutes()->getRoutesByMethod()['GET']), 404);
+// });
