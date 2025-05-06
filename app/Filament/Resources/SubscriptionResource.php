@@ -39,7 +39,14 @@ class SubscriptionResource extends Resource
                 Forms\Components\TextInput::make('duration_in_days')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('screenshot_path'),
+                // Forms\Components\TextInput::make('screenshot_path'),
+                Forms\Components\FileUpload::make('screenshot_path')
+                    ->label('Receipt Screenshot')
+                    ->image()
+                    ->directory('screenshots')
+                    ->downloadable()
+                    ->openable()
+                    ->previewable(),
                 Forms\Components\TextInput::make('transaction_reference'),
                 Forms\Components\TextInput::make('paid_at'),
                 Forms\Components\TextInput::make('starts_at'),
@@ -64,8 +71,13 @@ class SubscriptionResource extends Resource
                 Tables\Columns\TextColumn::make('duration_in_days')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('screenshot_path')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('screenshot_path')
+                //     ->searchable(),
+                Tables\Columns\ImageColumn::make('screenshot_path')
+                    ->label('Screenshot')
+                    ->circular() // optional: makes it round
+                    ->height(50) // optional: adjust size
+                    ->width(50),
                 Tables\Columns\TextColumn::make('transaction_reference')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('paid_at')
