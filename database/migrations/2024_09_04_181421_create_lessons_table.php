@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Section::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Course::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->longText('content')->nullable();
             $table->integer('order')->default(0);

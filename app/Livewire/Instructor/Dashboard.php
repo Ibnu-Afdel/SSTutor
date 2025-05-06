@@ -23,18 +23,18 @@ class Dashboard extends Component
 
             $this->totalCourses = Course::where('instructor_id', $instructorId)->count();
             $this->inProgressCourses = Course::where('instructor_id', $instructorId)
-                                             ->where('status', 'draft')
-                                             ->count();
+                ->where('status', 'draft')
+                ->count();
             $this->publishedCourses = Course::where('instructor_id', $instructorId)
-                                            ->where('status', 'published')
-                                            ->count();
+                ->where('status', 'published')
+                ->count();
             $this->archivedCourses = Course::where('instructor_id', $instructorId)
-                                            ->where('status', 'archived')
-                                            ->count();
+                ->where('status', 'archived')
+                ->count();
 
-            $this->enrolledStudents = Enrollment::whereHas('course', function($query) use ($instructorId) {
+            $this->enrolledStudents = Enrollment::whereHas('course', function ($query) use ($instructorId) {
                 $query->where('instructor_id', $instructorId);
-            })->distinct('student_id')->count();
+            })->distinct('user_id')->count();
         } else {
             $this->totalCourses = 0;
             $this->inProgressCourses = 0;

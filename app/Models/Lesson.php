@@ -33,4 +33,9 @@ class Lesson extends Model
     {
         return $this->hasMany(Comment::class)->latest();
     }
+
+    public function course(): HasMany
+    {
+        return $this->hasMany(Course::class);
+    }
 }

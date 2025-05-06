@@ -56,7 +56,7 @@
                             <i class="mr-1 fa-solid fa-chalkboard-user"></i> Dashboard
                         </a>
                     @elseif (auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="flex items-center hover:text-blue-500">
+                        <a href="/admin" class="flex items-center hover:text-blue-500">
                             <i class="mr-1 fa-solid fa-user-shield"></i> Dashboard
                         </a>
                     @endif
@@ -111,7 +111,7 @@
                             <i class="mr-1 fa-solid fa-chalkboard-user"></i> Dashboard
                         </a>
                     @elseif (auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="flex items-center block hover:text-blue-500">
+                        <a href="/admin" class="flex items-center block hover:text-blue-500">
                             <i class="mr-1 fa-solid fa-user-shield"></i> Dashboard
                         </a>
                     @endif
