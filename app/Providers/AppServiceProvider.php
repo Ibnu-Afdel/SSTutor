@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\User;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +27,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create', function ($user) {
             return  $user->role === 'instructor';
         });
+
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
