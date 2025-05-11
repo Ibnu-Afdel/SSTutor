@@ -30,6 +30,5 @@ yarn-error.log
  .buildpacks
 .heroku/
 app.json
-app/Traits/
 
 server.js
