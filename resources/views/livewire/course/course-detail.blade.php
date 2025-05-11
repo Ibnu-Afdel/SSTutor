@@ -2,12 +2,9 @@
 
     <div class="max-w-5xl mx-auto">
 
-        {{-- Course Header --}}
-        {{-- Wrap title and badge in a flex container for alignment --}}
         <div class="flex flex-wrap items-center gap-3 mb-2">
             <h1 class="text-3xl font-bold text-gray-900 md:text-4xl">{{ $course->name }}</h1>
 
-            {{-- Premium Badge - Display only if course->is_pro is true --}}
             @if ($course->is_pro)
                 <span
                     class="inline-flex items-center px-3 py-1 text-sm font-semibold text-yellow-800 bg-yellow-200 rounded-full">
@@ -17,8 +14,7 @@
             @endif
         </div>
 
-        {{-- Back and Manage Content Links --}}
-        <div class="flex flex-wrap items-center gap-4 mb-6"> {{-- Group links --}}
+        <div class="flex flex-wrap items-center gap-4 mb-6">
             <a href="{{ route('courses.index') }}"
                 class="inline-flex items-center px-4 py-2 font-medium text-gray-700 text-md ">
                 <i class="mr-2 text-gray-500 fas fa-arrow-left"></i>
@@ -71,7 +67,7 @@
                     <div class="flex items-center gap-3 text-sm">
                         <i class="w-5 text-center text-green-600 fas fa-dollar-sign fa-fw"></i>
                         <span class="font-medium text-gray-600">Price:</span>
-                        {{-- Optionally add visual cue for premium price if needed, but badge might be enough --}}
+
                         <span class="text-gray-800">${{ number_format($course->price, 2) }}</span>
                     </div>
                     <div class="flex items-center gap-3 text-sm">
@@ -251,10 +247,10 @@
                                 </a>
                             @endif
 
-                            <a href="{{ route('course-chat', ['course' => $course->id]) }}"
+                            {{-- <a href="{{ route('course-chat', ['course' => $course->id]) }}"
                                 class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 <i class="mr-2 fas fa-comments"></i> Chat
-                            </a>
+                            </a> --}}
                         @endauth
                     </div>
                 </div>

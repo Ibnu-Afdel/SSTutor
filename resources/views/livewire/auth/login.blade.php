@@ -18,8 +18,8 @@
         <div class="space-y-4">
             <p class="text-sm font-medium text-center text-gray-500">Sign in quickly with</p>
 
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <a href="/auth/github"
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-1">
+                {{-- <a href="/auth/github"
                     class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-gray-800 border border-transparent rounded-lg shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                     <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill-rule="evenodd"
@@ -27,7 +27,7 @@
                             clip-rule="evenodd" />
                     </svg>
                     GitHub
-                </a>
+                </a> --}}
                 <a href="/auth/google"
                     class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <svg class="w-5 h-5 mr-2 -ml-1" viewBox="0 0 48 48" aria-hidden="true">

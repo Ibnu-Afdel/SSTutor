@@ -146,8 +146,8 @@
                             class="block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                             <option value="" disabled>Select a plan</option>
                             @foreach ($plans as $key => $planOption)
-                                <option value="{{ $key }}">{{ $planOption['label'] }} -
-                                    {{ $planOption['price'] ?? 'N/A' }} ETB</option>
+                                <option value="{{ $key }}">{{ $planOption['label'] }}
+                                    {{ $planOption['price'] ?? '' }} </option>
                             @endforeach
                         </select>
                         <div
@@ -236,7 +236,7 @@
             </div>
         @endif
 
-        @if (env('APP_DEBUG', false))
+        {{-- @if (env('APP_DEBUG', false))
             <div class="pt-6 mt-6 text-xs text-gray-400 border-t border-gray-200">
                 <p class="font-medium text-gray-500"><i class="mr-1 fas fa-bug"></i>Developer Information:</p>
                 <ul class="mt-1 list-disc list-inside">
@@ -246,7 +246,7 @@
                     <li>pendingSubscriptionCount: {{ $pendingSubscriptionCount }}</li>
                 </ul>
             </div>
-        @endif
+        @endif --}}
 
     </div>
 </div>
