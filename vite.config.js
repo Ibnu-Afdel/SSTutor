@@ -8,4 +8,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        // Generate manifest.json in the build directory
+        manifest: true,
+        // Use relative paths for assets to work with any domain
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
+    },
 });

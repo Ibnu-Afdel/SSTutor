@@ -7,8 +7,8 @@
 
     <title>{{ $title ?? 'Course Management System' }}</title>
     
-    {{-- Proper Vite asset loading for both dev and production --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Using our custom component to load assets properly in all environments --}}
+    <x-vite-assets :inputs="['resources/css/app.css', 'resources/js/app.js']" />
     
     @livewireStyles
     {{-- Consider moving Toastr CSS/JS to app.js/app.css via Vite for better bundling --}}
