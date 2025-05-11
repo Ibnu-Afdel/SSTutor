@@ -3,14 +3,14 @@
 namespace App\Livewire\Course;
 
 use App\Models\Course;
+use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-
-    use WithFileUploads;
+    use WithFileUploads, CloudinaryUpload;
 
     public $name, $description, $image, $price, $duration, $level = 'beginner';
     public $start_date, $end_date, $status = 'draft', $enrollment_limit, $requirements, $syllabus;
@@ -48,9 +48,11 @@ class Create extends Component
             'discount_value' => 'nullable|numeric|min:0',
         ]);
 
-
-        $imagePath = $this->image ? $this->image->store('course-images', 'public') : null;
-
+        // Upload to Cloudinary if image exists
+        $imageData = null;
+        if ($this->image) {
+            $imageData = $this->uploadToCloudinary($this->image, 'course-images');
+        }
 
         $finalPrice = $this->price;
 
@@ -59,7 +61,6 @@ class Create extends Component
         } elseif ($this->discount && $this->discount_type === 'amount') {
             $finalPrice = max(0, $this->price - $this->discount_value);
         }
-
 
         $user = Auth::user();
 
@@ -71,7 +72,7 @@ class Create extends Component
             'is_pro' => (bool) $this->is_pro,
             'name' => $this->name,
             'description' => $this->description,
-            'image' => $imagePath,
+            'images' => $imageData,
             'price' => $finalPrice, // Use finalPrice instead of original price
             'original_price' => $this->price, // Save the original price
             'duration' => $this->duration,
@@ -88,7 +89,6 @@ class Create extends Component
             'discount_value' => $this->discount_value,
             'rating' => null,
         ]);
-
 
         return redirect()->route('courses.index');
     }

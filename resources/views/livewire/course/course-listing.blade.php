@@ -64,8 +64,8 @@
                             <a href="{{ route('course.detail', $course->id) }}"
                                 @if ($is_locked) onclick="return false;" title="Upgrade to Pro to access" @endif
                                 class="block w-full h-full">
-                                @if ($course->image)
-                                    <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}"
+                                @if ($course->imageUrl)
+                                    <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}"
                                         class="object-cover w-full h-full transition-transform duration-300 hover:scale-105 @if ($is_locked) opacity-75 @endif">
                                 @else
                                     <div

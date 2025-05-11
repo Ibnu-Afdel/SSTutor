@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('is_pro')->default(false);
             $table->string('name');
             $table->text('description');
-            $table->string('image')->nullable();
+            $table->json('images')->nullable();
             $table->boolean('discount')->default(false);
             $table->enum('discount_type', ['percent', 'amount'])->nullable();
             $table->decimal('discount_value', 8, 2)->nullable();

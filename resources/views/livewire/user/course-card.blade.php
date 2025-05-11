@@ -1,4 +1,3 @@
-
 <div class="relative flex flex-col p-4 bg-white border rounded-lg shadow-lg">
     @if ($course->discount && $course->discount_value > 0)
         <span class="absolute inline-block px-3 py-1 text-xs font-bold text-white bg-red-600 rounded-full top-2 right-2">
@@ -10,8 +9,8 @@
         </span>
     @endif
 
-    @if($course->image)
-        <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}" class="object-cover w-full h-40 mb-4 rounded-lg">
+    @if($course->imageUrl)
+        <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}" class="object-cover w-full h-40 mb-4 rounded-lg">
     @else
         <div class="flex items-center justify-center w-full h-40 mb-4 bg-gray-200 rounded-lg">
             <span class="font-serif text-2xl text-gray-500">{{ $course->name }}</span>

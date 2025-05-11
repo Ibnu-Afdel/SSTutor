@@ -16,7 +16,7 @@ class Course extends Model
     protected $fillable = [
         'name',
         'description',
-        'image',
+        'images',
         'discount',
         'discount_type',
         'discount_value',
@@ -39,7 +39,30 @@ class Course extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date'   => 'date',
+        'images'     => 'array',
     ];
+
+    /**
+     * Get the image URL for this course
+     * 
+     * @return string|null
+     */
+    public function getImageUrlAttribute()
+    {
+        if (is_array($this->images) && isset($this->images['url'])) {
+            return $this->images['url'];
+        }
+        
+        // Fallback for legacy data stored as paths
+        if (is_string($this->images)) {
+            if (filter_var($this->images, FILTER_VALIDATE_URL)) {
+                return $this->images;
+            }
+            return asset('storage/' . $this->images);
+        }
+        
+        return null;
+    }
 
     public function category(): BelongsToMany
     {

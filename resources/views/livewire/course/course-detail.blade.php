@@ -32,8 +32,8 @@
 
         {{-- Course Image --}}
         <div class="mb-8 overflow-hidden rounded-lg shadow-lg">
-            @if ($course->image)
-                <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}"
+            @if ($course->imageUrl)
+                <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}"
                     class="object-cover w-full h-64 md:h-80">
             @else
                 <div

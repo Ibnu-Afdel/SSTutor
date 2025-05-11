@@ -1,6 +1,6 @@
 /.phpunit.cache
 /node_modules
-/public/build
+# /public/build
 /public/hot
 /public/storage
 /storage/*.key
@@ -25,3 +25,11 @@ yarn-error.log
 
 /resources/views/livewire/subscriptions/manual-payment.test.blade.php
 /app/Livewire/Subscriptions/ManualPayment-test.php
+
+
+ .buildpacks
+.heroku/
+app.json
+app/Traits/
+
+server.js

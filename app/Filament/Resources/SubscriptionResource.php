@@ -73,7 +73,7 @@ class SubscriptionResource extends Resource
                     ->sortable(),
                 // Tables\Columns\TextColumn::make('screenshot_path')
                 //     ->searchable(),
-                Tables\Columns\ImageColumn::make('screenshot_path')
+                Tables\Columns\ImageColumn::make('screenshotUrl')
                     ->label('Screenshot')
                     ->circular() // optional: makes it round
                     ->height(50) // optional: adjust size

@@ -22,6 +22,32 @@ class Subscription extends Model
         'notes'
     ];
 
+    protected $casts = [
+        'screenshot_path' => 'array',
+    ];
+
+    /**
+     * Get the screenshot URL
+     * 
+     * @return string|null
+     */
+    public function getScreenshotUrlAttribute()
+    {
+        if (is_array($this->screenshot_path) && isset($this->screenshot_path['url'])) {
+            return $this->screenshot_path['url'];
+        }
+        
+        // Fallback for legacy data stored as paths
+        if (is_string($this->screenshot_path)) {
+            if (filter_var($this->screenshot_path, FILTER_VALIDATE_URL)) {
+                return $this->screenshot_path;
+            }
+            return asset('storage/' . $this->screenshot_path);
+        }
+        
+        return null;
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

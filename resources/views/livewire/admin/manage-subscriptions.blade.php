@@ -8,8 +8,8 @@
             <p><strong>Amount:</strong> {{ $subscription->amount }}</p>
             <p><strong>Duration:</strong> {{ $subscription->duration_in_days }} days</p>
 
-            @if ($subscription->screenshot_path)
-                <img src="{{ asset('storage/' . $subscription->screenshot_path) }}" alt="Screenshot"
+            @if ($subscription->screenshotUrl)
+                <img src="{{ $subscription->screenshotUrl }}" alt="Screenshot"
                     class="w-40 h-auto mt-2">
             @endif
 

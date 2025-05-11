@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('status', ['active', 'pending', 'expired', 'rejected'])->default('pending');
             $table->string('amount');
             $table->integer('duration_in_days');
-            $table->string('screenshot_path')->nullable();
+            $table->json('screenshot_path')->nullable();
             $table->string('transaction_reference')->nullable();
             $table->string('paid_at')->nullable();
             $table->string('starts_at')->nullable();

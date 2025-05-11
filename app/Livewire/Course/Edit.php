@@ -3,13 +3,15 @@
 namespace App\Livewire\Course;
 
 use App\Models\Course;
+use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class Edit extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, CloudinaryUpload;
 
     public $courseId;
     public $name, $description, $image, $price, $duration, $level;
@@ -19,6 +21,7 @@ class Edit extends Component
     public $discount_type; // 'percent' or 'amount'
     public $discount_value; // Value for discount (numeric)
     public $instructor_id; // Instructor's ID
+    public $is_pro;
 
     public function mount($courseId)
     {
@@ -47,6 +50,7 @@ class Edit extends Component
         $this->discount_type = $course->discount_type;
         $this->discount_value = $course->discount_value;
         $this->instructor_id = $course->instructor_id;
+        $this->is_pro = $course->is_pro;
     }
 
     
@@ -75,8 +79,17 @@ class Edit extends Component
         // Find the course to update
         $course = Course::findOrFail($this->courseId);
 
-        // Handle image upload
-        $imagePath = $this->image ? $this->image->store('course-images', 'public') : $course->image;
+        // Handle image upload with Cloudinary
+        $imageData = $course->images;
+        if ($this->image) {
+            // Delete the old image from Cloudinary if it exists
+            if (is_array($course->images) && isset($course->images['public_id'])) {
+                $this->deleteFromCloudinary($course->images['public_id']);
+            }
+            
+            // Upload the new image to Cloudinary
+            $imageData = $this->uploadToCloudinary($this->image, 'course-images');
+        }
 
         // Calculate final price with discount if applicable
         $finalPrice = $this->price;
@@ -91,7 +104,7 @@ class Edit extends Component
         $course->update([
             'name' => $this->name,
             'description' => $this->description,
-            'image' => $imagePath,
+            'images' => $imageData,
             'price' => $finalPrice,
             'original_price' => $this->price, // Save the original price
             'duration' => $this->duration,
@@ -105,6 +118,7 @@ class Edit extends Component
             'discount' => $this->discount,
             'discount_type' => $this->discount_type,
             'discount_value' => $this->discount_value,
+            'is_pro' => $this->is_pro,
         ]);
 
         // Redirect to the courses listing

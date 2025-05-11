@@ -4,6 +4,7 @@ namespace App\Livewire\Subscriptions;
 
 use App\Models\Subscription;
 use App\Models\User;
+use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -12,7 +13,7 @@ use Illuminate\Database\QueryException;
 
 class ManualPayment extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, CloudinaryUpload;
 
     public $plan = '';
     public $screenshot;
@@ -81,13 +82,14 @@ class ManualPayment extends Component
         }
 
         $selectedPlanData = $this->plans[$this->plan];
-        $path = null;
+        $screenshotData = null;
 
         try {
-            $path = $this->screenshot->store('manual_screenshots', 'public'); // Store in a specific subfolder
+            // Upload to Cloudinary
+            $screenshotData = $this->uploadToCloudinary($this->screenshot, 'subscription_screenshots');
 
-            if (!$path) {
-                throw new \Exception("Failed to store screenshot.");
+            if (!$screenshotData) {
+                throw new \Exception("Failed to upload screenshot.");
             }
 
             Subscription::create([
@@ -96,7 +98,7 @@ class ManualPayment extends Component
                 'status' => 'pending',
                 'amount' => $selectedPlanData['amount'],
                 'duration_in_days' => $selectedPlanData['duration'],
-                'screenshot_path' => $path,
+                'screenshot_path' => $screenshotData,
                 'notes' => $this->notes,
                 'transaction_reference' => null,
             ]);
@@ -104,9 +106,11 @@ class ManualPayment extends Component
             session()->flash('success', 'Your payment request has been submitted successfully and is pending admin review.');
             $this->reset(['plan', 'screenshot', 'notes']);
         } catch (\Exception $e) {
-            if ($path && Storage::disk('public')->exists($path)) {
-                Storage::disk('public')->delete($path);
+            // If there's an error and we have a Cloudinary upload, try to delete it
+            if ($screenshotData && isset($screenshotData['public_id'])) {
+                $this->deleteFromCloudinary($screenshotData['public_id']);
             }
+            
             session()->flash('error', 'An error occurred while submitting your request: ' . $e->getMessage() . ' Please try again.');
         }
     }
