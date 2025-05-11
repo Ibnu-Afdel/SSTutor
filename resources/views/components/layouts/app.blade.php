@@ -101,7 +101,7 @@
                 @endcan --}}
 
                 @auth
-                    {{-- Dashboard Link based on Role --}}
+
                     @if (auth()->user()->role === 'student')
                         <a href="{{ route('user.dashboard') }}" class="flex items-center block hover:text-blue-500">
                             <i class="mr-1 fa-solid fa-user-graduate"></i> Dashboard
