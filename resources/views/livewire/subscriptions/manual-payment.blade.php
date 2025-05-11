@@ -165,9 +165,9 @@
 
                 <div>
                     <label for="screenshot" class="block mb-2 text-sm font-medium text-gray-700">
-                        <i class="mr-1 text-gray-400 fas fa-camera fa-fw"></i>Upload Payment Screenshot:
+                        <i class="mr-1 text-gray-400 fas fa-camera fa-fw"></i>Upload Payment Screenshot (optional):
                     </label>
-                    <input id="screenshot" type="file" wire:model="screenshot" required
+                    <input id="screenshot" type="file" wire:model="screenshot"
                         class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
 
                     <div wire:loading wire:target="screenshot" class="mt-2 text-sm text-gray-500"><i

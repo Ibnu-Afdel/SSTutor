@@ -71,7 +71,7 @@ class ManualPayment extends Component
     {
         $this->validate([
             'plan' => 'required|in:' . implode(',', array_keys($this->plans)), // Dynamic validation based on keys
-            'screenshot' => 'required|image|max:2048',
+            'screenshot' => 'nullable|image|max:2048',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -85,11 +85,13 @@ class ManualPayment extends Component
         $screenshotData = null;
 
         try {
-            // Upload to Cloudinary
-            $screenshotData = $this->uploadToCloudinary($this->screenshot, 'subscription_screenshots');
-
-            if (!$screenshotData) {
-                throw new \Exception("Failed to upload screenshot.");
+            // Upload to Cloudinary if screenshot exists
+            if ($this->screenshot) {
+                $screenshotData = $this->uploadToCloudinary($this->screenshot, 'subscription_screenshots');
+                
+                if (!$screenshotData) {
+                    throw new \Exception("Failed to upload screenshot.");
+                }
             }
 
             Subscription::create([

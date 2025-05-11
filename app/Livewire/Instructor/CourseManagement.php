@@ -38,8 +38,8 @@ class CourseManagement extends Component
         return [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            // required on create, optional on update
-            'image' => ($this->courseId ? 'nullable' : 'required') . '|image|mimes:jpg,png,jpeg|max:2048',
+            // Make image always optional
+            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|numeric|min:1',
             'level' => 'required|in:beginner,intermediate,advanced',
@@ -105,7 +105,8 @@ class CourseManagement extends Component
         $validatedData = $this->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => ($this->courseId ? 'nullable' : 'required') . '|image|mimes:jpg,png,jpeg|max:2048',
+            // Make image always optional
+            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|numeric|min:1',
             'level' => 'required|in:beginner,intermediate,advanced',

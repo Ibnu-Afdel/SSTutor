@@ -43,8 +43,7 @@
 
         {{-- Image Upload --}}
         <div>
-            <label for="image" class="block mb-1 text-sm font-medium text-gray-700">Course Image <span
-                    class="text-red-500">*</span></label>
+            <label for="image" class="block mb-1 text-sm font-medium text-gray-700">Course Image (optional)</label>
             <div class="flex items-center mt-1 space-x-4">
                 {{-- Show existing image preview if available (passed from parent) --}}
                 @if ($existingImageUrl && !$image)
@@ -56,17 +55,10 @@
                     <img src="{{ $image->temporaryUrl() }}" class="object-cover w-auto h-16 rounded">
                 @endif
 
-                <input type="file" wire:model="image" id="image" {{ $courseId ? '' : 'required' }}
-                    {{-- Required only on create --}}
+                <input type="file" wire:model="image" id="image"
                     class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
             </div>
             <div wire:loading wire:target="image" class="mt-1 text-sm text-gray-500">Uploading...</div>
-            @error('image')
-                <span class="mt-1 text-sm text-red-600">{{ $message }}</span>
-            @enderror
-            @if ($courseId && $existingImageUrl)
-                <p class="mt-1 text-xs text-gray-500">Leave blank to keep the current image.</p>
-            @endif
         </div>
 
         {{-- Price & Level (Grouped on larger screens) --}}
