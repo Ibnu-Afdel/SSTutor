@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use Filament\Panel;
+use Filament\Models\Contracts\FilamentUser; // Import the FilamentUser interface
+use Filament\Panel; // Ensure you have this use statement
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser // Implement the FilamentUser interface
 {
     use HasFactory, Notifiable;
 
@@ -22,14 +21,6 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    // protected $fillable = [
-    //     'name',
-    //     'username',
-    //     'email',
-    //     'password',
-    //     'role',
-    //     'status'
-    // ];
     protected $fillable = [
         'role',
         'status',
@@ -42,7 +33,6 @@ class User extends Authenticatable
         'subscription_type',
         'subscription_status'
     ];
-
 
     /**
      * The attributes that should be hidden for serialization.
@@ -67,7 +57,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function canAcessPanel(Panel $panel)
+    public function canAccessPanel(Panel $panel): bool
     {
         return str_ends_with($this->email, '@buki.com');
     }
