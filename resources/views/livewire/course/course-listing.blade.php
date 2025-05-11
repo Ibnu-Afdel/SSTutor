@@ -59,22 +59,17 @@
                             </span>
                         @endif
 
-                        {{-- Course Image --}}
+                        {{-- Course Image - Only show if there's an image --}}
+                        @if ($course->imageUrl)
                         <div class="w-full aspect-[4/3] overflow-hidden bg-gray-200">
                             <a href="{{ route('course.detail', $course->id) }}"
                                 @if ($is_locked) onclick="return false;" title="Upgrade to Pro to access" @endif
                                 class="block w-full h-full">
-                                @if ($course->imageUrl)
-                                    <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}"
-                                        class="object-cover w-full h-full transition-transform duration-300 hover:scale-105 @if ($is_locked) opacity-75 @endif">
-                                @else
-                                    <div
-                                        class="flex items-center justify-center w-full h-full text-gray-400 @if ($is_locked) opacity-75 @endif">
-                                        <i class="text-4xl fas fa-image"></i>
-                                    </div>
-                                @endif
+                                <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}"
+                                    class="object-cover w-full h-full transition-transform duration-300 hover:scale-105 @if ($is_locked) opacity-75 @endif">
                             </a>
                         </div>
+                        @endif
 
                         {{-- Course Content --}}
                         <div class="flex flex-col justify-between flex-grow p-4">

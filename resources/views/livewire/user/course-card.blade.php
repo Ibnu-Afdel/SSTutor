@@ -11,10 +11,6 @@
 
     @if($course->imageUrl)
         <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}" class="object-cover w-full h-40 mb-4 rounded-lg">
-    @else
-        <div class="flex items-center justify-center w-full h-40 mb-4 bg-gray-200 rounded-lg">
-            <span class="font-serif text-2xl text-gray-500">{{ $course->name }}</span>
-        </div>
     @endif
 
     <div class="flex-1">

@@ -30,19 +30,13 @@
             @endif
         </div>
 
-        {{-- Course Image --}}
+        {{-- Course Image - Only show if there's an image --}}
+        @if ($course->imageUrl)
         <div class="mb-8 overflow-hidden rounded-lg shadow-lg">
-            @if ($course->imageUrl)
-                <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}"
-                    class="object-cover w-full h-64 md:h-80">
-            @else
-                <div
-                    class="flex flex-col items-center justify-center w-full h-64 text-gray-500 bg-gray-200 md:h-80 rounded-xl">
-                    <i class="mb-2 text-gray-400 fas fa-image fa-3x"></i>
-                    <span>No Image Available</span>
-                </div>
-            @endif
+            <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}"
+                class="object-cover w-full h-64 md:h-80">
         </div>
+        @endif
 
         {{-- Course Description --}}
         <p class="mb-8 text-lg leading-relaxed text-gray-700">{{ $course->description }}</p>
@@ -103,7 +97,7 @@
                     <div class="flex items-center gap-3 text-sm">
                         <i class="w-5 text-center text-indigo-600 fas fa-chalkboard-teacher fa-fw"></i>
                         <span class="font-medium text-gray-600">Instructor:</span>
-                        <a href="{{ route('user.profile', ['username' => $username]) }}">
+                        <a href="{{ route('user.profile', ['username' => $course->instructor->username]) }}">
                             <span
                                 class="p-2 font-bold text-blue-800 rounded-lg bg-blue-50 hover:bg-blue-100">{{ $course->instructor->name }}</span>
                         </a>
