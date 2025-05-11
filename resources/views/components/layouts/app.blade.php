@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ $title ?? 'Course Management System' }}</title>
-    
-    {{-- Using our custom component to load assets properly in all environments --}}
-    <x-vite-assets :inputs="['resources/css/app.css', 'resources/js/app.js']" />
-    
+    @vite('resources/css/app.css')
     @livewireStyles
     {{-- Consider moving Toastr CSS/JS to app.js/app.css via Vite for better bundling --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -168,6 +165,7 @@
 
 
     @livewireScripts
+    @vite('resources/js/app.js')
 </body>
 
 </html>
