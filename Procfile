@@ -1,1 +1,1 @@
-web: heroku-php-apache2 public/ 
+web: npm run build && heroku-php-apache2 public/ 

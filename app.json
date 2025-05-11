@@ -1,0 +1,12 @@
+{
+  "name": "SSTutor",
+  "description": "Online course management system",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/php"
+    }
+  ]
+} 
