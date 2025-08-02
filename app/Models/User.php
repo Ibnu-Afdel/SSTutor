@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements FilamentUser // Implement the FilamentUser interface
 {
@@ -59,7 +60,8 @@ class User extends Authenticatable implements FilamentUser // Implement the Fila
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@buki.com');
+        // Allow users with admin role or emails ending with @buki.com
+        return $this->role === 'admin' || str_ends_with($this->email, '@admin.com');
     }
 
     public function courses()
@@ -117,5 +119,44 @@ class User extends Authenticatable implements FilamentUser // Implement the Fila
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (empty($user->username)) {
+                $user->username = static::generateUniqueUsername($user->name ?: $user->email);
+            }
+        });
+    }
+
+    /**
+     * Generate a unique username based on name or email
+     */
+    protected static function generateUniqueUsername($source)
+    {
+        // Extract base from name or email
+        $base = Str::slug(Str::before($source, '@'), '');
+
+        // If base is empty, use 'user' as fallback
+        if (empty($base)) {
+            $base = 'user';
+        }
+
+        $username = $base;
+        $counter = 1;
+
+        // Keep trying until we find a unique username
+        while (static::where('username', $username)->exists()) {
+            $username = $base . $counter;
+            $counter++;
+        }
+
+        return $username;
     }
 }

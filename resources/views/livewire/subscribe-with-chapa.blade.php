@@ -114,8 +114,7 @@
                             <option value="30">Monthly - 199 ETB</option>
                             <option value="365">Yearly - 1999 ETB (Save over 16%)</option>
                         </select>
-                        <div
-                            class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none">
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none">
                             <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                             </svg>
@@ -156,7 +155,7 @@
 
                 <div class="space-y-4 sm:space-y-0 sm:flex sm:gap-4">
 
-                    {{-- <button wire:click="pay" wire:loading.attr="disabled" wire:target="pay"
+                    <button wire:click="pay" wire:loading.attr="disabled" wire:target="pay"
                         wire:loading.class.remove="hover:from-purple-700 hover:to-indigo-800"
                         wire:loading.class="opacity-75 cursor-wait"
                         class="flex items-center justify-center w-full px-6 py-3 text-base font-bold text-white transition duration-150 ease-in-out border border-transparent rounded-lg shadow-md bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
@@ -174,7 +173,7 @@
                             <i class="mr-2 fas fa-spinner fa-spin"></i>
                             Processing...
                         </span>
-                    </button> --}}
+                    </button>
 
                     <a href="{{ route('subscribe.manual') }}"
                         class="flex items-center justify-center w-full px-6 py-3 text-base font-bold text-indigo-700 transition duration-150 ease-in-out bg-white border border-indigo-300 rounded-lg shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -201,13 +200,13 @@
         @endif
 
         {{-- @if (env('APP_DEBUG', false))
-            <div class="pt-6 mt-6 text-xs text-gray-400 border-t border-gray-200">
-                <p class="font-medium text-gray-500"><i class="mr-1 fas fa-bug"></i>Developer Information:</p>
-                <p class="mt-1">Manual Chapa verification URL structure:</p>
-                <p class="p-2 mt-1 overflow-x-auto font-mono text-gray-600 bg-gray-100 rounded">
-                    {{ route('chapa.callback') }}?tx_ref=[transaction_reference]
-                </p>
-            </div>
+        <div class="pt-6 mt-6 text-xs text-gray-400 border-t border-gray-200">
+            <p class="font-medium text-gray-500"><i class="mr-1 fas fa-bug"></i>Developer Information:</p>
+            <p class="mt-1">Manual Chapa verification URL structure:</p>
+            <p class="p-2 mt-1 overflow-x-auto font-mono text-gray-600 bg-gray-100 rounded">
+                {{ route('chapa.callback') }}?tx_ref=[transaction_reference]
+            </p>
+        </div>
         @endif --}}
 
     </div>

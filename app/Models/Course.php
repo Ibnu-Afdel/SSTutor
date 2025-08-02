@@ -49,8 +49,15 @@ class Course extends Model
      */
     public function getImageUrlAttribute()
     {
-        if (is_array($this->images) && isset($this->images['url'])) {
-            return $this->images['url'];
+        // Handle new local storage format
+        if (is_array($this->images)) {
+            if (isset($this->images['url'])) {
+                return $this->images['url'];
+            }
+            // Handle path-based storage
+            if (isset($this->images['path'])) {
+                return asset('storage/' . $this->images['path']);
+            }
         }
         
         // Fallback for legacy data stored as paths

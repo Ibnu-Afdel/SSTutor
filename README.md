@@ -33,7 +33,7 @@ SSTutor is a comprehensive online learning platform built with Laravel, Livewire
 - **Authentication**: Laravel Authentication with OAuth support
 - **Database**: pgsql
 - **Payment Integration**: Chapa Payment Gateway
-- **File Storage**: Cloudinary
+- **File Storage**: Local Storage (Laravel)
 - **Deployment**: Heroku-ready
 
 ## Installation
@@ -66,11 +66,9 @@ SSTutor is a comprehensive online learning platform built with Laravel, Livewire
    DB_PASSWORD=
    ```
 
-5. Configure Cloudinary for file uploads in .env
+5. Create the storage symbolic link for file uploads
    ```
-   CLOUDINARY_CLOUD_NAME=your-cloud-name
-   CLOUDINARY_API_KEY=your-api-key
-   CLOUDINARY_API_SECRET=your-api-secret
+   php artisan storage:link
    ```
 
 6. Run migrations and seed the database

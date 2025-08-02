@@ -3,14 +3,13 @@
 namespace App\Livewire\Course;
 
 use App\Models\Course;
-use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use WithFileUploads, CloudinaryUpload;
+    use WithFileUploads;
 
     public $name, $description, $image, $price, $duration, $level = 'beginner';
     public $start_date, $end_date, $status = 'draft', $enrollment_limit, $requirements, $syllabus;
@@ -48,10 +47,11 @@ class Create extends Component
             'discount_value' => 'nullable|numeric|min:0',
         ]);
 
-        // Upload to Cloudinary if image exists
+        // Upload image to local storage if exists
         $imageData = null;
         if ($this->image) {
-            $imageData = $this->uploadToCloudinary($this->image, 'course-images');
+            $path = $this->image->store('course-images', 'public');
+            $imageData = ['path' => $path];
         }
 
         $finalPrice = $this->price;
