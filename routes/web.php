@@ -69,7 +69,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/instructor/apply', InstructorApplicationForm::class)->name('instructor.apply');
 });
 
-Route::get('/chapa/callback', [ChapaController::class, 'callback'])->name('chapa.callback');
+// Route::get('/chapa/callback', [ChapaController::class, 'callback'])->name('chapa.callback');
+Route::get('/subscribe/chapa', [ChapaController::class, 'initialize'])->name('chapa.pay');
+Route::get('/subscribe/chapa/callback', [ChapaController::class, 'verify'])->name('chapa.verify');
 
 
 Route::get('/login', Login::class)->name('login')->middleware('guest');

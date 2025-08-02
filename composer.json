@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "chapa/chapa-laravel": "dev-main",
         "filament/filament": "^3.3",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",

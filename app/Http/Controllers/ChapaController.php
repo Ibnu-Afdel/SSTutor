@@ -3,85 +3,57 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscription;
+use Chapa\Chapa\Facades\Chapa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class ChapaController extends Controller
 {
-    public function callback(Request $request)
+    protected $chapa;
+
+    public function __construct()
     {
-        $tx_ref = $request->query('tx_ref') ?? $request->query('trx_ref') ?? $request->input('tx_ref') ?? $request->input('trx_ref');
-        $status = $request->query('status') ?? $request->input('status');
-
-        if (!$tx_ref) {
-            return redirect()->route('home')->with('error', 'Payment verification failed: No transaction reference found.');
-        }
-
-        $subscription = Subscription::with('user')->where('transaction_reference', $tx_ref)->first();
-
-        if (!$subscription && strpos($tx_ref, '-') !== false) {
-            $tx_ref_parts = explode('-', $tx_ref, 2);
-            $tx_ref_without_prefix = $tx_ref_parts[1] ?? $tx_ref;
-
-            $subscription = Subscription::with('user')
-                ->where('transaction_reference', 'like', '%' . $tx_ref_without_prefix)
-                ->orderBy('created_at', 'desc')
-                ->first();
-        }
-
-        if (!$subscription) {
-            return redirect()->route('home')->with('error', 'Payment verification failed: No subscription found for this transaction.');
-        }
-
-        if ($subscription->status === 'active') {
-            return redirect()->route('home')->with('success', 'Your subscription is already active.');
-        }
-
-        if ((env('APP_ENV') === 'local' || env('APP_DEBUG')) && (!empty($status) && strtolower($status) === 'success' || str_starts_with($tx_ref, 'TX-'))) {
-            $startDate = now();
-            $expiresAt = $startDate->copy()->addDays($subscription->duration_in_days);
-
-            $subscription->update([
-                'status' => 'active',
-                'paid_at' => $startDate,
-                'starts_at' => $startDate,
-                'expires_at' => $expiresAt,
-            ]);
-
-            $subscription->user->update([
-                'is_pro' => true,
-                'pro_expires_at' => $expiresAt,
-                'subscription_type' => 'chapa',
-                'subscription_status' => 'active',
-            ]);
-
-            return redirect()->route('home')->with('success', 'Test payment successful and subscription activated.');
-        }
-
-        $response = Http::withToken(env('CHAPA_SECRET_KEY'))->get("https://api.chapa.co/v1/transaction/verify/{$tx_ref}");
-
-        if ($response->successful() && $response['data']['status'] === 'success') {
-            $startDate = now();
-            $expiresAt = $startDate->copy()->addDays($subscription->duration_in_days);
-
-            $subscription->update([
-                'status' => 'active',
-                'paid_at' => now(),
-                'starts_at' => $startDate,
-                'expires_at' => $expiresAt,
-            ]);
-
-            $subscription->user->update([
-                'is_pro' => true,
-                'pro_expires_at' => $expiresAt,
-                'subscription_type' => 'chapa',
-                'subscription_status' => 'active',
-            ]);
-
-            return redirect()->route('home')->with('success', 'Payment successful and subscription activated.');
-        }
-
-        $errorMsg = $response->json('message') ?? 'Payment verification failed';
-        return redirect()->route('home')->with('error', $errorMsg);
+        $this->chapa = Chapa::class;
     }
+
+    public function initialize(Request $request)
+    {
+        $user = Auth::user();
+        $tx_ref = 'TX-' . Str::uuid();
+
+        $amount = 100;
+        $duration = 30;
+
+        Subscription::create([
+            'user_id' => $user->id,
+            'payment_method' => 'chapa',
+            'status' => 'pending',
+            'amount' => $amount,
+            'duration_in_days' => $duration,
+            'transaction_reference' => $tx_ref,
+        ]);
+
+        $data = [
+            'amount' => $amount,
+            'email' => $user->email,
+            'first_name' => $user->name,
+            'tx_ref' => $tx_ref,
+            'currency' => 'ETB',
+            'callback_url' => route('chapa.verify'),
+            'return_url' => route('chapa.verify'),
+            'customization' => [
+                'title' => 'SSTutor Subscription',
+                'description' => 'Subscribe to SSTutor to access premium content',
+            ]
+        ];
+        $response = $this->chapa::initialize($data);
+
+        if ($response['status'] === 'success') {
+            return redirect($response['data']['checkout_url']);
+        }
+        return back()->with('error', 'Payment initialization failed');
+    }
+
 }

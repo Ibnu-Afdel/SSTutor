@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af176add043a5c0d56e5e5f69ddc43d5",
+    "content-hash": "1ebb974ea57f45ca882ba2731bbccd55",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -350,6 +350,81 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "chapa/chapa-laravel",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Chapa-Et/chapa-laravel.git",
+                "reference": "0242ee6f8232958dfdc36558cd2349393a0c7ce5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Chapa-Et/chapa-laravel/zipball/0242ee6f8232958dfdc36558cd2349393a0c7ce5",
+                "reference": "0242ee6f8232958dfdc36558cd2349393a0c7ce5",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6|~7|~8|~9",
+                "illuminate/support": "5.0 - 11.0 || ~11.0",
+                "php": "7.2 - 8.3 || ^8.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Chapa": "Chapa\\Chapa\\Facades\\Chapa"
+                    },
+                    "providers": [
+                        "Chapa\\Chapa\\ChapaServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Chapa\\Chapa\\": "src/"
+                },
+                "classmap": [
+                    "src/Chapa.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kidus Yared",
+                    "email": "kidusy@chapa.co",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Israel Goytom",
+                    "email": "myfirstname@chapa.co",
+                    "role": "CTO"
+                },
+                {
+                    "name": "Semeredin Nurgeba",
+                    "email": "semernur11@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel Package to Accept Payment through Chapa",
+            "homepage": "https://github.com/chapa-et/chapa-laravel",
+            "keywords": [
+                "chapa",
+                "chapa-laravel"
+            ],
+            "support": {
+                "source": "https://github.com/Chapa-Et/chapa-laravel/tree/main"
+            },
+            "time": "2025-02-21T06:39:27+00:00"
         },
         {
             "name": "clue/redis-protocol",
@@ -12010,7 +12085,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "chapa/chapa-laravel": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
