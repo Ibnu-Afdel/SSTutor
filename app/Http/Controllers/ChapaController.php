@@ -56,4 +56,25 @@ class ChapaController extends Controller
         return back()->with('error', 'Payment initialization failed');
     }
 
+    public function verify(Request $request)
+    {
+        $tx_ref = $request->get('tx_ref');
+
+        $response = $this->chapa::verify($tx_ref);
+        if (!isset($response['status']) || $response['status'] !== 'success') {
+            return redirect()->route('home')->with('error', 'Payment verification failed');
+        }
+
+        $data = $response['data'];
+        $subscription = Subscription::where('transaction_reference', $tx_ref)->first();
+
+        $subscription->update([
+            'status' => 'active',
+            'paid_at' => now(),
+            'expires_at' => now()->addDays($subscription->duration_in_days),
+        ]);
+
+        return redirect()->route('home')->with('success', 'Subscription activated successfully');
+    }
+
 }
