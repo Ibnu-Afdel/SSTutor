@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\Course\DiscountType;
+use App\Enums\Course\Levels;
+use App\Enums\Course\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,7 +42,9 @@ class Course extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date'   => 'date',
-        'images'     => 'array',
+        'status' =>  Status::class,
+        'level' => Levels::class,
+        'discount_type' => DiscountType::class
     ];
 
     /**
@@ -47,29 +52,7 @@ class Course extends Model
      * 
      * @return string|null
      */
-    public function getImageUrlAttribute()
-    {
-        // Handle new local storage format
-        if (is_array($this->images)) {
-            if (isset($this->images['url'])) {
-                return $this->images['url'];
-            }
-            // Handle path-based storage
-            if (isset($this->images['path'])) {
-                return asset('storage/' . $this->images['path']);
-            }
-        }
-        
-        // Fallback for legacy data stored as paths
-        if (is_string($this->images)) {
-            if (filter_var($this->images, FILTER_VALIDATE_URL)) {
-                return $this->images;
-            }
-            return asset('storage/' . $this->images);
-        }
-        
-        return null;
-    }
+    
 
     public function category(): BelongsToMany
     {
@@ -81,10 +64,6 @@ class Course extends Model
         return $this->belongsTo(User::class, 'instructor_id');
     }
 
-    // public function lessons()
-    // {
-    //     return $this->hasMany(Lesson::class);
-    // }
 
     public function lessons(): HasManyThrough
     {

@@ -17,14 +17,14 @@ return new class extends Migration
             $table->boolean('is_pro')->default(false);
             $table->string('name');
             $table->text('description');
-            $table->enum('level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+            $table->string('level')->default('beginner');
+            $table->string('status')->default('draft');
 
             // Monetization-related (nullable for now..)
             $table->decimal('price', 8, 2)->nullable();
             $table->decimal('original_price', 8, 2)->nullable();
             $table->boolean('discount')->default(false);
-            $table->enum('discount_type', ['percent', 'amount'])->nullable();
+            $table->string('discount_type')->nullable();
             $table->decimal('discount_value', 8, 2)->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
