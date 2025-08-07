@@ -6,27 +6,46 @@ use App\Models\Subscription;
 use Chapa\Chapa\Facades\Chapa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class ChapaController extends Controller
 {
-    protected $chapa;
-
-    public function __construct()
-    {
-        $this->chapa = Chapa::class;
-    }
-
     public function initialize(Request $request)
     {
         $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Please login first.');
+        }
+
+        // Get payment details
+        $duration = $request->get('duration', 30);
+        $amount = $duration == 30 ? 199 : 1999;
+
+        // Prevent duplicate active subscriptions
+        $activeSubscription = Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if ($activeSubscription && !$user->is_pro) {
+            return redirect()->route('subscribe.index')
+                ->with('info', 'You already have an active subscription.');
+        }
+
+        // Cancel pending subscriptions
+        Subscription::where('user_id', $user->id)
+            ->where('payment_method', 'chapa')
+            ->where('status', 'pending')
+            ->update([
+                'status' => 'cancelled',
+                'notes' => 'Cancelled due to new payment attempt'
+            ]);
+
+        // Create new subscription
         $tx_ref = 'TX-' . Str::uuid();
-
-        $amount = 100;
-        $duration = 30;
-
-        Subscription::create([
+        
+        $subscription = Subscription::create([
             'user_id' => $user->id,
             'payment_method' => 'chapa',
             'status' => 'pending',
@@ -35,46 +54,97 @@ class ChapaController extends Controller
             'transaction_reference' => $tx_ref,
         ]);
 
-        $data = [
+        // Initialize Chapa payment
+        $paymentData = [
             'amount' => $amount,
+            'currency' => 'ETB',
             'email' => $user->email,
             'first_name' => $user->name,
             'tx_ref' => $tx_ref,
-            'currency' => 'ETB',
+            
+            // callback_url: Where Chapa sends server-to-server notification about payment status
+            // return_url: Where user is redirected after completing payment on Chapa's page
+            // Both point to same route because our verify() method handles both scenarios
             'callback_url' => route('chapa.verify'),
             'return_url' => route('chapa.verify'),
+            
             'customization' => [
-                'title' => 'SSTutor Subscription',
-                'description' => 'Subscribe to SSTutor to access premium content',
+                'title' => 'Pro Subscription',
+                'description' => $duration == 30 ? 'SSTutor Monthly Pro Access' : 'SSTutor Yearly Pro Access',
             ]
         ];
-        $response = $this->chapa::initialize($data);
+
+        $response = Chapa::initializePayment($paymentData);
 
         if ($response['status'] === 'success') {
             return redirect($response['data']['checkout_url']);
         }
-        return back()->with('error', 'Payment initialization failed');
+
+        // Handle failure
+        $subscription->update([
+            'status' => 'failed',
+            'notes' => $response['message'] ?? 'Payment initialization failed'
+        ]);
+
+        return redirect()->route('subscribe.index')
+            ->with('error', 'Payment initialization failed. Please try again.');
     }
 
     public function verify(Request $request)
     {
-        $tx_ref = $request->get('tx_ref');
+        // This method handles both:
+        // 1. callback_url: Server-to-server notification from Chapa
+        // 2. return_url: User redirect after payment completion
+        // Both scenarios send trx_ref parameter for verification
+        
+        $tx_ref = $request->get('trx_ref'); 
 
-        $response = $this->chapa::verify($tx_ref);
-        if (!isset($response['status']) || $response['status'] !== 'success') {
-            return redirect()->route('home')->with('error', 'Payment verification failed');
+        if (!$tx_ref) {
+            // Silent redirect if user is already pro (likely a page refresh)
+            if (Auth::check() && Auth::user()->is_pro) {
+                return redirect()->route('subscribe.index');
+            }
+            return redirect()->route('subscribe.index')
+                ->with('error', 'Payment verification failed.');
         }
 
-        $data = $response['data'];
-        $subscription = Subscription::where('transaction_reference', $tx_ref)->first();
+        // Verify with Chapa
+        $response = Chapa::verifyTransaction($tx_ref);
+        
+        if ($response['status'] !== 'success') {
+            return redirect()->route('subscribe.index')
+                ->with('error', 'Payment verification failed.');
+        }
 
+        // Find subscription
+        $subscription = Subscription::where('transaction_reference', $tx_ref)->first();
+        
+        if (!$subscription) {
+            return redirect()->route('subscribe.index')
+                ->with('error', 'Subscription not found.');
+        }
+
+        if ($subscription->status === 'active') {
+            return redirect()->route('subscribe.index');
+        }
+
+        // Activate subscription
+        $expiresAt = now()->addDays($subscription->duration_in_days);
+        
         $subscription->update([
             'status' => 'active',
             'paid_at' => now(),
-            'expires_at' => now()->addDays($subscription->duration_in_days),
+            'starts_at' => now(),
+            'expires_at' => $expiresAt,
         ]);
 
-        return redirect()->route('home')->with('success', 'Subscription activated successfully');
-    }
+        // Update user pro status
+        $subscription->user->update([
+            'is_pro' => true,
+            'pro_expires_at' => $expiresAt,
+        ]);
 
+        return redirect()->route('subscribe.index')
+            ->with('success', 'Subscription activated successfully! Welcome to Pro!');
+    }
 }

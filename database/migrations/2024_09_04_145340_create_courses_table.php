@@ -17,27 +17,27 @@ return new class extends Migration
             $table->boolean('is_pro')->default(false);
             $table->string('name');
             $table->text('description');
-            $table->json('images')->nullable();
+            $table->enum('level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
+            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+
+            // Monetization-related (nullable for now..)
+            $table->decimal('price', 8, 2)->nullable();
+            $table->decimal('original_price', 8, 2)->nullable();
             $table->boolean('discount')->default(false);
             $table->enum('discount_type', ['percent', 'amount'])->nullable();
             $table->decimal('discount_value', 8, 2)->nullable();
-            $table->decimal('rating', 2, 1)->nullable();
-            $table->decimal('price', 8, 2)->nullable();
-            $table->decimal('original_price', 8, 2)->nullable();
-            $table->integer('duration')->nullable();
-            $table->enum('level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->integer('enrollment_limit')->nullable();
+
+            // Learning info
+            $table->integer('duration')->nullable();
             $table->text('requirements')->nullable();
             $table->longText('syllabus')->nullable();
-            // $table->foreignIdFor(Instructor::class)->constrained()->cascadeOnDelete();  
+            $table->decimal('rating', 2, 1)->nullable();
 
-            $table->foreignId('instructor_id')
-                ->constrained('users')
-                ->cascadeOnDelete();
-
+            // Relationships
+            $table->foreignId('instructor_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
