@@ -16,7 +16,8 @@
         "laravel/reverb": "^1.0",
         "laravel/socialite": "^5.20",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.5"
+        "livewire/livewire": "^3.5",
+        "spatie/laravel-medialibrary": "^11.13"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

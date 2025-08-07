@@ -11,15 +11,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Course extends Model
+class Course extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
     // protected $guarded = [];
     protected $fillable = [
         'name',
         'description',
-        'images',
         'discount',
         'discount_type',
         'discount_value',

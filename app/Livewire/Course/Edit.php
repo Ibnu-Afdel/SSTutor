@@ -12,10 +12,11 @@ class Edit extends Component
 {
     use WithFileUploads;
 
-    public $courseId;
+    // public $courseId;
     public $name, $description, $image, $price, $duration, $level;
     public $start_date, $end_date, $status, $enrollment_limit, $requirements, $syllabus;
     public $original_price;
+    public ?Course $courseId = null;
     public $discount = false; // Toggle for discount
     public $discount_type; // 'percent' or 'amount'
     public $discount_value; // Value for discount (numeric)
@@ -24,6 +25,7 @@ class Edit extends Component
 
     public function mount($courseId)
     {
+        dd($courseId);
         $this->courseId = $courseId;
         $course = Course::findOrFail($courseId);
 

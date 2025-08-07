@@ -60,12 +60,12 @@
                         @endif
 
                         {{-- Course Image - Only show if there's an image --}}
-                        @if ($course->imageUrl)
+                        @if ($course->getFirstMediaUrl('image'))
                         <div class="w-full aspect-[4/3] overflow-hidden bg-gray-200">
                             <a href="{{ route('course.detail', $course->id) }}"
                                 @if ($is_locked) onclick="return false;" title="Upgrade to Pro to access" @endif
                                 class="block w-full h-full">
-                                <img src="{{ $course->imageUrl }}" alt="{{ $course->name }}"
+                                <img src="{{ $course->getFirstMediaUrl('image') }}" alt="{{ $course->name }}"
                                     class="object-cover w-full h-full transition-transform duration-300 hover:scale-105 @if ($is_locked) opacity-75 @endif">
                             </a>
                         </div>
