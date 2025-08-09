@@ -86,7 +86,7 @@
   </div>
 
   <div class="px-4 pb-4 mt-auto">
-      <a href="{{ route('course.detail', $course->id) }}" @class([
+      <a href="{{ route('course.detail', $course) }}" @class([
           'block w-full px-4 py-2 text-sm font-medium text-center text-white transition rounded-md',
             'bg-gray-400 hover:bg-gray-500 cursor-not-allowed' => $course->is_locked,
           'bg-indigo-600 hover:bg-indigo-700' => !$course->is_locked,
