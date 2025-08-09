@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // User::observe(UserObserver::class);
+        User::observe(UserObserver::class);
         Gate::define('create', function ($user) {
             return  $user->role === 'instructor';
         });

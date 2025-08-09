@@ -2,26 +2,24 @@
 
 namespace App\Observers;
 
-use App\Models\Instructor;
+// use App\Models\Instructor;
 use App\Models\User;
+use App\Services\UsernameGenerator;
 
 class UserObserver
 {
+    public function creating(User $user) 
+    {
+        if (empty($user->username)) {
+            $user->username = UsernameGenerator::generate($user->name?: $user->email);
+        }
+    }
     /**
      * Handle the User "created" event.
      */
     public function created(User $user): void
     {
-        if ($user->role === 'instructor') {
-            // Check if instructor already exists
-            if (!Instructor::where('user_id', $user->id)->exists()) {
-                Instructor::create([
-                    'user_id' => $user->id,
-                    'name' => $user->name,
-                    // Add other fields as needed
-                ]);
-            }
-        }
+       //
     }
 
     /**

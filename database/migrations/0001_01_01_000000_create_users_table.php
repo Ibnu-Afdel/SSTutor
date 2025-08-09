@@ -23,7 +23,9 @@ return new class extends Migration
             $table->enum('subscription_type', ['manual', 'chapa', 'arifpay'])->default('manual');
             $table->enum('subscription_status', ['active', 'pending', 'expired', 'rejected'])->default('expired');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

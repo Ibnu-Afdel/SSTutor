@@ -121,45 +121,6 @@ class User extends Authenticatable implements FilamentUser // Implement the Fila
         return $this->belongsTo(Subscription::class);
     }
 
-    /**
-     * Boot the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($user) {
-            if (empty($user->username)) {
-                $user->username = static::generateUniqueUsername($user->name ?: $user->email);
-            }
-        });
-    }
-
-    /**
-     * Generate a unique username based on name or email
-     */
-    protected static function generateUniqueUsername($source)
-    {
-        // Extract base from name or email
-        $base = Str::slug(Str::before($source, '@'), '');
-
-        // If base is empty, use 'user' as fallback
-        if (empty($base)) {
-            $base = 'user';
-        }
-
-        $username = $base;
-        $counter = 1;
-
-        // Keep trying until we find a unique username
-        while (static::where('username', $username)->exists()) {
-            $username = $base . $counter;
-            $counter++;
-        }
-
-        return $username;
-    }
-
     public function isEnrolledIn(Course $course)
     {
         return $this->enrollments()->where('course_id', $course->id)->exists();
