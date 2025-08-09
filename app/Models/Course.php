@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -44,10 +45,36 @@ class Course extends Model implements HasMedia
     protected $casts = [
         'start_date' => 'date',
         'end_date'   => 'date',
+        'is_pro' => 'boolean',
         'status' =>  Status::class,
         'level' => Levels::class,
         'discount_type' => DiscountType::class
     ];
+
+    public function getIsLockedAttribute(): bool
+    {
+        $user = Auth::user();
+        return $this->is_pro && (! $user || !$user->is_pro);
+    }
+
+    public function getOriginalPriceAttribute()
+    {
+        return $this->original_price ?? $this->price;
+    }
+
+    public function getFinalPriceAttribute()
+    {
+        $price = $this->original_price ?? $this->price;
+        if ($this->discount && $this->discount_value > 0){
+            return match($this->discount_type){
+                'percent' => $price *((100 - $this->discount_value) / 100),
+                'amount' => max(0, $price - $this->discount_value),
+                default => $price
+            };
+        }
+        return $price;
+
+    }
 
     /**
      * Get the image URL for this course
