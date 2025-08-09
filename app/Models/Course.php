@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Course\DiscountType;
 use App\Enums\Course\Levels;
 use App\Enums\Course\Status;
+use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,7 @@ class Course extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use HasFactory;
+    use HasSlug;
     // protected $guarded = [];
     protected $fillable = [
         'name',
@@ -83,6 +85,11 @@ class Course extends Model implements HasMedia
                     ->orderBy('order')
                     ->get();
                     
+        }
+
+        public function getRouteKeyName()
+        {
+            return 'slug';
         }
 
     /**

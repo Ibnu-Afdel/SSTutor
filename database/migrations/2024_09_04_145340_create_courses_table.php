@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->boolean('is_pro')->default(false);
             $table->string('name');
+            $table->string('slug')->unique();
             $table->text('description');
             $table->string('level')->default('beginner');
             $table->string('status')->default('draft');

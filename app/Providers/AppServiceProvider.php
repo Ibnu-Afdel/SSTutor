@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Course;
 use App\Models\User;
+use App\Observers\CourseObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
@@ -24,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         User::observe(UserObserver::class);
+        Course::observe(CourseObserver::class);
+        
         Gate::define('create', function ($user) {
             return  $user->role === 'instructor';
         });
