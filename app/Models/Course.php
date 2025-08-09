@@ -76,6 +76,15 @@ class Course extends Model implements HasMedia
 
     }
 
+        public function getSyllabusSectionsAttribute()
+        {
+        return  $this->sections()
+                    ->with(['lessons' => fn($q) => $q->orderBy('order')])
+                    ->orderBy('order')
+                    ->get();
+                    
+        }
+
     /**
      * Get the image URL for this course
      * 

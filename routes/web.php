@@ -24,6 +24,7 @@ use App\Livewire\Admin\ManageSubscriptions;
 use App\Livewire\Course\Create;
 use App\Livewire\Course\Edit;
 use App\Livewire\Course\Index;
+use App\Livewire\Course\Show;
 use App\Livewire\Instructor\ManageContent;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,7 @@ Route::get('/', HomePage::class)->name('home');
 
 Route::get('/courses', Index::class)->name('courses.index');
 
-Route::get('/courses/{courseId}', CourseDetail::class)->middleware('auth')->name('course.detail');
+Route::get('/courses/{course}', Show::class)->middleware('auth')->name('course.detail');
 
 
 

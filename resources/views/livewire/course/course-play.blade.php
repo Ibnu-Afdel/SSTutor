@@ -44,7 +44,7 @@
     <div class="px-6 py-4 mb-6 bg-white border-b border-gray-200 shadow-sm">
         <h1 class="text-2xl font-semibold text-gray-800">{{ $course->name }}</h1>
     </div>
-    <a href="{{ route('course.detail', ['courseId' => $course->id]) }}"
+    <a href="{{ route('course.detail', ['course' => $course->id]) }}"
         class="inline-flex items-center px-4 pb-2 font-medium text-gray-700 transition text-md">
         <i class="mr-2 text-gray-500 fas fa-arrow-left"></i>
         Back

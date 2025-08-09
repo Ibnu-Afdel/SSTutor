@@ -159,4 +159,14 @@ class User extends Authenticatable implements FilamentUser // Implement the Fila
 
         return $username;
     }
+
+    public function isEnrolledIn(Course $course)
+    {
+        return $this->enrollments()->where('course_id', $course->id)->exists();
+    }
+
+    // return Enrollment::where('user_id', $this->id)
+    // ->where('course_id', $course->id)
+    // ->exists();
+
 }
