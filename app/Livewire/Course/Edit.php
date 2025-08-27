@@ -3,20 +3,20 @@
 namespace App\Livewire\Course;
 
 use App\Models\Course;
-use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 
 class Edit extends Component
 {
-    use WithFileUploads, CloudinaryUpload;
+    use WithFileUploads;
 
-    public $courseId;
+    // public $courseId;
     public $name, $description, $image, $price, $duration, $level;
     public $start_date, $end_date, $status, $enrollment_limit, $requirements, $syllabus;
     public $original_price;
+    public ?Course $courseId = null;
     public $discount = false; // Toggle for discount
     public $discount_type; // 'percent' or 'amount'
     public $discount_value; // Value for discount (numeric)
@@ -25,6 +25,7 @@ class Edit extends Component
 
     public function mount($courseId)
     {
+        dd($courseId);
         $this->courseId = $courseId;
         $course = Course::findOrFail($courseId);
 
@@ -79,16 +80,17 @@ class Edit extends Component
         // Find the course to update
         $course = Course::findOrFail($this->courseId);
 
-        // Handle image upload with Cloudinary
+        // Handle image upload with local storage
         $imageData = $course->images;
         if ($this->image) {
-            // Delete the old image from Cloudinary if it exists
-            if (is_array($course->images) && isset($course->images['public_id'])) {
-                $this->deleteFromCloudinary($course->images['public_id']);
+            // Delete the old image from local storage if it exists
+            if (is_array($course->images) && isset($course->images['path'])) {
+                Storage::disk('public')->delete($course->images['path']);
             }
             
-            // Upload the new image to Cloudinary
-            $imageData = $this->uploadToCloudinary($this->image, 'course-images');
+            // Upload the new image to local storage
+            $path = $this->image->store('course-images', 'public');
+            $imageData = ['path' => $path];
         }
 
         // Calculate final price with discount if applicable

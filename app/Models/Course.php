@@ -2,21 +2,29 @@
 
 namespace App\Models;
 
+use App\Enums\Course\DiscountType;
+use App\Enums\Course\Levels;
+use App\Enums\Course\Status;
+use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Course extends Model
+class Course extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
+    use HasSlug;
     // protected $guarded = [];
     protected $fillable = [
         'name',
         'description',
-        'images',
         'discount',
         'discount_type',
         'discount_value',
@@ -39,30 +47,57 @@ class Course extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date'   => 'date',
-        'images'     => 'array',
+        'is_pro' => 'boolean',
+        'status' =>  Status::class,
+        'level' => Levels::class,
+        'discount_type' => DiscountType::class
     ];
+
+    public function getIsLockedAttribute(): bool
+    {
+        $user = Auth::user();
+        return $this->is_pro && (! $user || !$user->is_pro);
+    }
+
+    public function getOriginalPriceAttribute()
+    {
+        return $this->original_price ?? $this->price;
+    }
+
+    public function getFinalPriceAttribute()
+    {
+        $price = $this->original_price ?? $this->price;
+        if ($this->discount && $this->discount_value > 0){
+            return match($this->discount_type){
+                'percent' => $price *((100 - $this->discount_value) / 100),
+                'amount' => max(0, $price - $this->discount_value),
+                default => $price
+            };
+        }
+        return $price;
+
+    }
+
+        public function getSyllabusSectionsAttribute()
+        {
+        return  $this->sections()
+                    ->with(['lessons' => fn($q) => $q->orderBy('order')])
+                    ->orderBy('order')
+                    ->get();
+                    
+        }
+
+        public function getRouteKeyName()
+        {
+            return 'slug';
+        }
 
     /**
      * Get the image URL for this course
      * 
      * @return string|null
      */
-    public function getImageUrlAttribute()
-    {
-        if (is_array($this->images) && isset($this->images['url'])) {
-            return $this->images['url'];
-        }
-        
-        // Fallback for legacy data stored as paths
-        if (is_string($this->images)) {
-            if (filter_var($this->images, FILTER_VALIDATE_URL)) {
-                return $this->images;
-            }
-            return asset('storage/' . $this->images);
-        }
-        
-        return null;
-    }
+    
 
     public function category(): BelongsToMany
     {
@@ -74,10 +109,6 @@ class Course extends Model
         return $this->belongsTo(User::class, 'instructor_id');
     }
 
-    // public function lessons()
-    // {
-    //     return $this->hasMany(Lesson::class);
-    // }
 
     public function lessons(): HasManyThrough
     {

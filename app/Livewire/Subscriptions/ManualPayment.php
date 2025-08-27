@@ -4,16 +4,15 @@ namespace App\Livewire\Subscriptions;
 
 use App\Models\Subscription;
 use App\Models\User;
-use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\QueryException;
 
 class ManualPayment extends Component
 {
-    use WithFileUploads, CloudinaryUpload;
+    use WithFileUploads;
 
     public $plan = '';
     public $screenshot;
@@ -85,13 +84,10 @@ class ManualPayment extends Component
         $screenshotData = null;
 
         try {
-            // Upload to Cloudinary if screenshot exists
+            // Upload to local storage if screenshot exists
             if ($this->screenshot) {
-                $screenshotData = $this->uploadToCloudinary($this->screenshot, 'subscription_screenshots');
-                
-                if (!$screenshotData) {
-                    throw new \Exception("Failed to upload screenshot.");
-                }
+                $path = $this->screenshot->store('subscription_screenshots', 'public');
+                $screenshotData = ['path' => $path];
             }
 
             Subscription::create([
@@ -108,9 +104,9 @@ class ManualPayment extends Component
             session()->flash('success', 'Your payment request has been submitted successfully and is pending admin review.');
             $this->reset(['plan', 'screenshot', 'notes']);
         } catch (\Exception $e) {
-            // If there's an error and we have a Cloudinary upload, try to delete it
-            if ($screenshotData && isset($screenshotData['public_id'])) {
-                $this->deleteFromCloudinary($screenshotData['public_id']);
+            // If there's an error and we have a local upload, try to delete it
+            if ($screenshotData && isset($screenshotData['path'])) {
+                Storage::disk('public')->delete($screenshotData['path']);
             }
             
             session()->flash('error', 'An error occurred while submitting your request: ' . $e->getMessage() . ' Please try again.');

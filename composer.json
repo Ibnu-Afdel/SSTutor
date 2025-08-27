@@ -9,13 +9,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "chapa/chapa-laravel": "dev-main",
         "filament/filament": "^3.3",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",
         "laravel/reverb": "^1.0",
         "laravel/socialite": "^5.20",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.5"
+        "livewire/livewire": "^3.5",
+        "spatie/laravel-medialibrary": "^11.13"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

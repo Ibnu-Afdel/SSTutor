@@ -4,14 +4,14 @@ namespace App\Livewire\Instructor;
 
 use App\Models\Category;
 use App\Models\Course;
-use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class CourseManagement extends Component
 {
-    use WithFileUploads, CloudinaryUpload;
+    use WithFileUploads;
 
     public $courses = [];
     public $categories;
@@ -135,13 +135,14 @@ class CourseManagement extends Component
             // Handle image upload
             $imageData = $course->images;
             if ($this->image) {
-                // Delete the old image from Cloudinary if it exists
-                if (is_array($course->images) && isset($course->images['public_id'])) {
-                    $this->deleteFromCloudinary($course->images['public_id']);
+                // Delete the old image from local storage if it exists
+                if (is_array($course->images) && isset($course->images['path'])) {
+                    Storage::disk('public')->delete($course->images['path']);
                 }
                 
-                // Upload the new image to Cloudinary
-                $imageData = $this->uploadToCloudinary($this->image, 'course-images');
+                // Upload the new image to local storage
+                $path = $this->image->store('course-images', 'public');
+                $imageData = ['path' => $path];
             }
             
             $course->update([
@@ -167,10 +168,11 @@ class CourseManagement extends Component
             session()->flash('message', 'Course updated successfully.');
         } else {
             // Create new course
-            // Upload to Cloudinary if image exists
+            // Upload to local storage if image exists
             $imageData = null;
             if ($this->image) {
-                $imageData = $this->uploadToCloudinary($this->image, 'course-images');
+                $path = $this->image->store('course-images', 'public');
+                $imageData = ['path' => $path];
             }
 
             Course::create([

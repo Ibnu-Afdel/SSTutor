@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Course;
 
+use App\Enums\Course\DiscountType;
+use App\Enums\Course\Levels;
+use App\Enums\Course\Status;
 use App\Models\Course;
-use App\Traits\CloudinaryUpload;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use WithFileUploads, CloudinaryUpload;
+    use WithFileUploads;
 
     public $name, $description, $image, $price, $duration, $level = 'beginner';
     public $start_date, $end_date, $status = 'draft', $enrollment_limit, $requirements, $syllabus;
@@ -35,24 +38,26 @@ class Create extends Component
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'price' => 'required|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
             'duration' => 'nullable|numeric|min:1',
-            'level' => 'required|in:beginner,intermediate,advanced',
+            'level' => ['required', new Enum(Levels::class)],
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'status' => 'required|in:draft,published,archived',
+            'status' => ['required', new Enum(Status::class)],
             'enrollment_limit' => 'nullable|integer|min:1',
             'requirements' => 'nullable|string',
             'syllabus' => 'nullable|string',
-            'discount_type' => 'nullable|in:percent,amount',
+            'discount_type' => ['nullable', new Enum(DiscountType::class)],
             'discount_value' => 'nullable|numeric|min:0',
         ]);
 
-        // Upload to Cloudinary if image exists
-        $imageData = null;
-        if ($this->image) {
-            $imageData = $this->uploadToCloudinary($this->image, 'course-images');
-        }
+        // Upload image to local storage if exists
+        // $imageData = null;
+        // if ($this->image) {
+        //     $path = $this->image->store('course-images', 'public');
+        //     $imageData = ['path' => $path];
+        // }
+
 
         $finalPrice = $this->price;
 
@@ -68,13 +73,12 @@ class Create extends Component
             abort(403, 'You are not authorized to create courses.');
         }
 
-        Course::create([
+        $course = Course::create([
             'is_pro' => (bool) $this->is_pro,
             'name' => $this->name,
             'description' => $this->description,
-            'images' => $imageData,
-            'price' => $finalPrice, // Use finalPrice instead of original price
-            'original_price' => $this->price, // Save the original price
+            'price' => $finalPrice,
+            'original_price' => $this->price,
             'duration' => $this->duration,
             'level' => $this->level,
             'start_date' => $this->start_date,
@@ -82,19 +86,26 @@ class Create extends Component
             'status' => $this->status,
             'enrollment_limit' => $this->enrollment_limit,
             'requirements' => $this->requirements,
-            'syllabus' => $this->syllabus,
+            // 'syllabus' => $this->syllabus,
             'instructor_id' => $user->id,
             'discount' => $this->discount,
             'discount_type' => $this->discount_type,
             'discount_value' => $this->discount_value,
-            'rating' => null,
+            // 'rating' => $this->rating ?: null,
         ]);
+
+        if ($this->image) {
+            $course->addMedia($this->image->getRealPath())
+                ->usingFileName($this->image->getClientOriginalName())
+                ->toMediaCollection('images');
+        }
 
         return redirect()->route('courses.index');
     }
 
     public function render()
     {
+        $courses = Course::get();
         return view('livewire.course.create');
     }
 }

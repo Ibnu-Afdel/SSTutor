@@ -100,7 +100,7 @@
                                     </p>
                                     <p class="flex items-center">
                                         <i class="w-4 mr-2 text-center text-blue-500 fas fa-layer-group fa-fw"></i>
-                                        Level: {{ ucfirst($course->level) }}
+                                        Level: {{ ucfirst($course->level->value) }}
                                     </p>
                                     {{-- Gone dd other relevant info like duration, students etc. if available --}}
                                     {{-- <p class="flex items-center">

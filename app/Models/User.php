@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements FilamentUser // Implement the FilamentUser interface
 {
@@ -59,7 +60,8 @@ class User extends Authenticatable implements FilamentUser // Implement the Fila
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@buki.com');
+        // Allow users with admin role or emails ending with @buki.com
+        return $this->role === 'admin' || str_ends_with($this->email, '@admin.com');
     }
 
     public function courses()
@@ -118,4 +120,14 @@ class User extends Authenticatable implements FilamentUser // Implement the Fila
     {
         return $this->belongsTo(Subscription::class);
     }
+
+    public function isEnrolledIn(Course $course)
+    {
+        return $this->enrollments()->where('course_id', $course->id)->exists();
+    }
+
+    // return Enrollment::where('user_id', $this->id)
+    // ->where('course_id', $course->id)
+    // ->exists();
+
 }

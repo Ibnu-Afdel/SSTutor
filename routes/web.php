@@ -8,7 +8,6 @@ use App\Livewire\Subscriptions\ManualPayment;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\ManageCourses;
 use App\Livewire\Admin\ManageUsers;
-use App\Livewire\Course\CourseListing;
 use App\Livewire\Course\CourseDetail;
 use App\Livewire\Instructor\CourseManagement;
 use App\Livewire\User\Profile;
@@ -24,14 +23,16 @@ use App\Livewire\Admin\InstructorApplicationForm;
 use App\Livewire\Admin\ManageSubscriptions;
 use App\Livewire\Course\Create;
 use App\Livewire\Course\Edit;
+use App\Livewire\Course\Index;
+use App\Livewire\Course\Show;
 use App\Livewire\Instructor\ManageContent;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', HomePage::class)->name('home');
 
-Route::get('/courses', CourseListing::class)->name('courses.index');
+Route::get('/courses', Index::class)->name('courses.index');
 
-Route::get('/courses/{courseId}', CourseDetail::class)->middleware('auth')->name('course.detail');
+Route::get('/courses/{course}', Show::class)->middleware('auth')->name('course.detail');
 
 
 
@@ -69,7 +70,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/instructor/apply', InstructorApplicationForm::class)->name('instructor.apply');
 });
 
-Route::get('/chapa/callback', [ChapaController::class, 'callback'])->name('chapa.callback');
+// Route::get('/chapa/callback', [ChapaController::class, 'callback'])->name('chapa.callback');
+Route::get('/subscribe/chapa', [ChapaController::class, 'initialize'])->name('chapa.pay');
+Route::get('/subscribe/chapa/callback', [ChapaController::class, 'verify'])->name('chapa.verify');
 
 
 Route::get('/login', Login::class)->name('login')->middleware('guest');
